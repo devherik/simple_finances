@@ -33,9 +33,6 @@ class _PageAuthState extends State<PageAuth> {
         color: gbl.primaryDark,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        // decoration: const BoxDecoration(
-        //     image: DecorationImage(
-        //         image: AssetImage(gbl.backgroundImage), fit: BoxFit.cover)),
         child: SingleChildScrollView(
           reverse: true,
           padding: const EdgeInsets.all(16),
@@ -199,7 +196,7 @@ class _PageAuthState extends State<PageAuth> {
                       onLongPress: null,
                       minWidth: MediaQuery.of(context).size.width * .6,
                       child: Text(
-                        'ENTRAR',
+                        'Entrar',
                         style: TextStyle(
                             letterSpacing: 3,
                             fontSize: 20,
