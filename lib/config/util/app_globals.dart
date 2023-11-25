@@ -7,8 +7,11 @@ const String appTitle = 'Simple Finances';
 String centroLabel = '';
 const String backgroundImage = 'assets/worker_background.jpeg';
 
-const greenMy = Color.fromARGB(255, 135, 238, 188);
-const redMy = Color.fromARGB(255, 226, 141, 141);
-const blueMy = Color.fromARGB(255, 84, 189, 238);
-var darkColor = HexColor('#2c6975');
-var lightColor = HexColor('#e4ebf1');
+const baseGreen = Color.fromARGB(255, 135, 238, 188);
+const baseRed = Color.fromARGB(255, 226, 141, 141);
+const baseBlue = Color.fromARGB(255, 84, 189, 238);
+var primaryDark = HexColor('#17120d');
+var secondaryDark = HexColor('#423025');
+var neutral = HexColor('#685850');
+var primaryLight = HexColor('#bebbba');
+var secondaryLight = HexColor('#8d8480');

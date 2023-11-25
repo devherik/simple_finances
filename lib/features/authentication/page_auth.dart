@@ -12,10 +12,9 @@ class PageAuth extends StatefulWidget {
 }
 
 class _PageAuthState extends State<PageAuth> {
-  bool _showPassword = true;
   final _emailTextControll = TextEditingController();
   final _passwordTextControll = TextEditingController();
-  dynamic _imputColor = gbl.lightColor;
+  dynamic _imputColor = gbl.primaryLight;
 
   bool _checkInputs() {
     // check the data from textfields and return true if they are empty
@@ -31,7 +30,7 @@ class _PageAuthState extends State<PageAuth> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: gbl.darkColor,
+        color: gbl.primaryDark,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         // decoration: const BoxDecoration(
@@ -42,110 +41,116 @@ class _PageAuthState extends State<PageAuth> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 80),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 80),
                 child: Text(
                   'Simple Finances',
                   style: TextStyle(
-                      color: Colors.white, letterSpacing: 3, fontSize: 60),
+                      color: gbl.primaryLight, letterSpacing: 3, fontSize: 60),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailTextControll,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   style: TextStyle(
-                      fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                      fontSize: 15, letterSpacing: 3, color: gbl.primaryLight),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 18, horizontal: 16),
-                    border: OutlineInputBorder(
+                    border: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                      borderSide: BorderSide(color: gbl.primaryLight, width: 1),
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                      borderSide: BorderSide(color: gbl.primaryLight, width: 1),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                      borderSide: BorderSide(color: gbl.primaryLight, width: 1),
                     ),
                     labelText: 'E-mail',
                     labelStyle: TextStyle(
-                        fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                        fontSize: 15,
+                        letterSpacing: 3,
+                        color: gbl.primaryLight),
                     hintText: 'usuario@mail.com',
                     hintStyle: TextStyle(
-                        fontSize: 10, letterSpacing: 3, color: gbl.lightColor),
+                        fontSize: 10,
+                        letterSpacing: 3,
+                        color: gbl.primaryLight),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.visiblePassword,
                   controller: _passwordTextControll,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   maxLength: 6,
-                  obscureText: _showPassword,
+                  obscureText: true,
                   style: TextStyle(
-                      fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                      fontSize: 15, letterSpacing: 3, color: gbl.primaryLight),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 18, horizontal: 16),
-                    suffixIcon: GestureDetector(
-                        onTap: () => setState(() {
-                              _showPassword = !_showPassword;
-                            }),
-                        child: !_showPassword
-                            ? Icon(
-                                Icons.visibility,
-                                size: 24,
-                                color: gbl.lightColor,
-                              )
-                            : Icon(
-                                Icons.visibility_off,
-                                size: 24,
-                                color: gbl.lightColor,
-                              )),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    suffixIcon: MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      splashColor: Colors.transparent,
+                      child: Text(
+                        '| Esqueceu?',
+                        style: TextStyle(
+                            fontSize: 10,
+                            letterSpacing: 3,
+                            color: gbl.primaryLight),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    border: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                      borderSide: BorderSide(color: gbl.primaryLight, width: 1),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    enabledBorder: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.primaryLight, width: 1),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: _imputColor, width: 1),
                     ),
                     labelText: 'Senha',
                     labelStyle: TextStyle(
-                        fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                        fontSize: 15,
+                        letterSpacing: 3,
+                        color: gbl.primaryLight),
                     hintText: '******',
                     hintStyle: TextStyle(
-                        fontSize: 10, letterSpacing: 3, color: gbl.lightColor),
+                        fontSize: 10,
+                        letterSpacing: 3,
+                        color: gbl.primaryLight),
                   ),
                   onChanged: (value) {
                     if (value.length < 6) {
                       setState(() {
-                        _imputColor = gbl.redMy;
+                        _imputColor = gbl.baseRed;
                       });
                     } else {
                       setState(() {
-                        _imputColor = gbl.lightColor;
+                        _imputColor = gbl.primaryLight;
                       });
                     }
                   },
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.only(top: 20, bottom: 70),
                 child: MaterialButton(
                   onPressed: () {
                     if (_checkInputs()) {
@@ -167,35 +172,23 @@ class _PageAuthState extends State<PageAuth> {
                     }
                   },
                   elevation: 4,
-                  color: gbl.blueMy,
+                  color: gbl.secondaryDark,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(30)),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  splashColor: Colors.blueGrey,
+                  splashColor: gbl.primaryLight,
                   onLongPress: null,
                   minWidth: MediaQuery.of(context).size.width,
                   child: Text(
                     'ENTRAR',
                     style: TextStyle(
-                        letterSpacing: 3, fontSize: 20, color: gbl.lightColor),
+                        letterSpacing: 3,
+                        fontSize: 20,
+                        color: gbl.primaryLight),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: MaterialButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  splashColor: Colors.blueGrey,
-                  child: Text(
-                    'Reculperar minha senha',
-                    style: TextStyle(
-                        fontSize: 14, letterSpacing: 3, color: gbl.lightColor),
-                  ),
-                ),
-              )
             ],
           ),
         ),

@@ -14,7 +14,7 @@ class UiWidgets {
         height: 2,
         color: Colors.blueGrey,
       ),
-      dropdownColor: gbl.lightColor,
+      dropdownColor: gbl.primaryLight,
       onChanged: (String? value) {
         // This is called when the user selects an item.
         // add here a valuenotifier, because can't use etState
@@ -92,11 +92,11 @@ class UiWidgets {
             ),
           ),
           labelText: lable,
-          labelStyle:
-              TextStyle(fontSize: 15, color: gbl.darkColor, letterSpacing: 3),
+          labelStyle: TextStyle(
+              fontSize: 15, color: gbl.secondaryDark, letterSpacing: 3),
           hintText: hint,
-          hintStyle:
-              TextStyle(fontSize: 14, color: gbl.darkColor, letterSpacing: 3),
+          hintStyle: TextStyle(
+              fontSize: 14, color: gbl.secondaryDark, letterSpacing: 3),
           filled: true,
           fillColor: const Color(0x00ffffff)),
     );
@@ -107,9 +107,10 @@ class UiWidgets {
       content: Text(
         label,
         textAlign: TextAlign.center,
-        style: const TextStyle(letterSpacing: 3, fontSize: 15),
+        style:
+            TextStyle(letterSpacing: 3, fontSize: 15, color: gbl.primaryLight),
       ),
-      backgroundColor: gbl.redMy,
+      backgroundColor: gbl.primaryDark,
     );
     ScaffoldMessenger.of(context).showSnackBar(snack);
   }

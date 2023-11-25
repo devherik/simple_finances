@@ -7,9 +7,9 @@ abstract class AppTheme {
     return ThemeData(
       appBarTheme: AppBarTheme(
         elevation: 0.0,
-        color: gbl.lightColor,
+        color: gbl.primaryLight,
       ),
-      scaffoldBackgroundColor: gbl.lightColor,
+      scaffoldBackgroundColor: gbl.primaryLight,
       primarySwatch: Colors.lightGreen,
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       useMaterial3: true,
@@ -19,9 +19,9 @@ abstract class AppTheme {
 
   static ThemeData get dark {
     return ThemeData(
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0.0,
-        color: Colors.transparent,
+        color: gbl.primaryDark,
       ),
       scaffoldBackgroundColor: Colors.black,
       primarySwatch: Colors.lightGreen,
