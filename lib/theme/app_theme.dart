@@ -13,7 +13,7 @@ abstract class AppTheme {
       primarySwatch: Colors.lightGreen,
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       useMaterial3: true,
-      fontFamily: GoogleFonts.raleway().fontFamily,
+      fontFamily: GoogleFonts.robotoSlab().fontFamily,
     );
   }
 
@@ -27,7 +27,7 @@ abstract class AppTheme {
       primarySwatch: Colors.lightGreen,
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       useMaterial3: true,
-      fontFamily: GoogleFonts.raleway().fontFamily,
+      fontFamily: GoogleFonts.robotoSlab().fontFamily,
     );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "704863275253",
+    "project_id": "simple-finances-c5203",
+    "storage_bucket": "simple-finances-c5203.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704863275253:android:9cbacefb99168d24e81dbc",
+        "android_client_info": {
+          "package_name": "com.example.simple_finances"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYLPp8tKFCmdim_x2za38o-GoqUv1Jidg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

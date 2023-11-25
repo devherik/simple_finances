@@ -6,16 +6,16 @@ import 'package:simple_finances/widget_tree.dart';
 class AppRouter {
   final router = GoRouter(routes: [
     GoRoute(
-      path: 'login',
+      path: '/login',
       builder: (context, state) => const PageAuth(),
     ),
     GoRoute(
-      path: 'home',
+      path: '/home',
       builder: (context, state) => const PageHome(),
     ),
     GoRoute(
-      path: 'widgettree',
+      path: '/widgettree',
       builder: (context, state) => const WidgetTree(),
     )
-  ], initialLocation: 'widgettree');
+  ], initialLocation: '/widgettree');
 }
