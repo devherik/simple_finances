@@ -15,6 +15,7 @@ class _PageAuthState extends State<PageAuth> {
   bool _showPassword = true;
   final _emailTextControll = TextEditingController();
   final _passwordTextControll = TextEditingController();
+  dynamic _imputColor = gbl.lightColor;
 
   bool _checkInputs() {
     // check the data from textfields and return true if they are empty
@@ -30,11 +31,12 @@ class _PageAuthState extends State<PageAuth> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: gbl.darkColor,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(gbl.backgroundImage), fit: BoxFit.cover)),
+        // decoration: const BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage(gbl.backgroundImage), fit: BoxFit.cover)),
         child: SingleChildScrollView(
           reverse: true,
           padding: const EdgeInsets.all(16),
@@ -43,12 +45,9 @@ class _PageAuthState extends State<PageAuth> {
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 80),
                 child: Text(
-                  'SIMPLE FINANCES',
+                  'Simple Finances',
                   style: TextStyle(
-                      color: Colors.white,
-                      letterSpacing: 3,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 60),
+                      color: Colors.white, letterSpacing: 3, fontSize: 60),
                 ),
               ),
               Padding(
@@ -56,6 +55,32 @@ class _PageAuthState extends State<PageAuth> {
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailTextControll,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    ),
+                    labelText: 'E-mail',
+                    labelStyle: TextStyle(
+                        fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                    hintText: 'usuario@mail.com',
+                    hintStyle: TextStyle(
+                        fontSize: 10, letterSpacing: 3, color: gbl.lightColor),
+                  ),
                 ),
               ),
               Padding(
@@ -63,6 +88,60 @@ class _PageAuthState extends State<PageAuth> {
                 child: TextField(
                   keyboardType: TextInputType.visiblePassword,
                   controller: _passwordTextControll,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                  maxLength: 6,
+                  obscureText: _showPassword,
+                  style: TextStyle(
+                      fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 16),
+                    suffixIcon: GestureDetector(
+                        onTap: () => setState(() {
+                              _showPassword = !_showPassword;
+                            }),
+                        child: !_showPassword
+                            ? Icon(
+                                Icons.visibility,
+                                size: 24,
+                                color: gbl.lightColor,
+                              )
+                            : Icon(
+                                Icons.visibility_off,
+                                size: 24,
+                                color: gbl.lightColor,
+                              )),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: gbl.lightColor, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: _imputColor, width: 1),
+                    ),
+                    labelText: 'Senha',
+                    labelStyle: TextStyle(
+                        fontSize: 15, letterSpacing: 3, color: gbl.lightColor),
+                    hintText: '******',
+                    hintStyle: TextStyle(
+                        fontSize: 10, letterSpacing: 3, color: gbl.lightColor),
+                  ),
+                  onChanged: (value) {
+                    if (value.length < 6) {
+                      setState(() {
+                        _imputColor = gbl.redMy;
+                      });
+                    } else {
+                      setState(() {
+                        _imputColor = gbl.lightColor;
+                      });
+                    }
+                  },
                 ),
               ),
               Padding(
@@ -104,13 +183,16 @@ class _PageAuthState extends State<PageAuth> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: MaterialButton(
                   onPressed: () {},
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  splashColor: Colors.blueGrey,
                   child: Text(
-                    'Reculperar a senha',
+                    'Reculperar minha senha',
                     style: TextStyle(
-                        fontSize: 14, letterSpacing: 3, color: Colors.white),
+                        fontSize: 14, letterSpacing: 3, color: gbl.lightColor),
                   ),
                 ),
               )
