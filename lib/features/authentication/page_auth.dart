@@ -150,43 +150,73 @@ class _PageAuthState extends State<PageAuth> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20, bottom: 70),
-                child: MaterialButton(
-                  onPressed: () {
-                    if (_checkInputs()) {
-                      UiWidgets().showMessage(
-                          'Confira seus dados e tente novamente.', context);
-                    } else {
-                      FireAuth()
-                          .signInWithEmailAndPassword(
-                              email: _emailTextControll.text,
-                              password: _passwordTextControll.text)
-                          .onError(
-                            (error, stackTrace) => UiWidgets()
-                                .showMessage(error.toString(), context),
-                          );
-                      if (kDebugMode) {
-                        print(
-                            '${_emailTextControll.text}, ${_passwordTextControll.text}');
-                      }
-                    }
-                  },
-                  elevation: 4,
-                  color: gbl.secondaryDark,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  splashColor: gbl.primaryLight,
-                  onLongPress: null,
-                  minWidth: MediaQuery.of(context).size.width,
-                  child: Text(
-                    'ENTRAR',
-                    style: TextStyle(
-                        letterSpacing: 3,
-                        fontSize: 20,
-                        color: gbl.primaryLight),
-                  ),
+                padding: const EdgeInsets.only(top: 15, bottom: 70),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    MaterialButton(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 18),
+                      onPressed: () {},
+                      elevation: 4,
+                      color: gbl.secondaryDark,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Image.asset(
+                        'assets/logos/google_logo.png',
+                        fit: BoxFit.cover,
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        if (_checkInputs()) {
+                          UiWidgets().showMessage(
+                              'Confira seus dados e tente novamente.', context);
+                        } else {
+                          FireAuth()
+                              .signInWithEmailAndPassword(
+                                  email: _emailTextControll.text,
+                                  password: _passwordTextControll.text)
+                              .onError(
+                                (error, stackTrace) => UiWidgets()
+                                    .showMessage(error.toString(), context),
+                              );
+                          if (kDebugMode) {
+                            print(
+                                '${_emailTextControll.text}, ${_passwordTextControll.text}');
+                          }
+                        }
+                      },
+                      elevation: 4,
+                      color: gbl.primaryLight,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 20),
+                      splashColor: gbl.secondaryDark,
+                      onLongPress: null,
+                      minWidth: MediaQuery.of(context).size.width * .6,
+                      child: Text(
+                        'ENTRAR',
+                        style: TextStyle(
+                            letterSpacing: 3,
+                            fontSize: 20,
+                            color: gbl.primaryDark),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(
+                  'Code Spellcaster Studio',
+                  style: TextStyle(
+                      color: gbl.secondaryLight,
+                      fontSize: 10,
+                      letterSpacing: 4),
                 ),
               ),
             ],
