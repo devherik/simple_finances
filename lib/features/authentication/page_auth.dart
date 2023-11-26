@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 import 'package:simple_finances/config/util/app_ui_widgets.dart';
@@ -179,7 +180,8 @@ class _PageAuthState extends State<PageAuth> {
                               .onError(
                                 (error, stackTrace) => UiWidgets()
                                     .showMessage(error.toString(), context),
-                              );
+                              )
+                              .whenComplete(() => context.go('/home'));
                           if (kDebugMode) {
                             print(
                                 '${_emailTextControll.text}, ${_passwordTextControll.text}');

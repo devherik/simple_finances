@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:simple_finances/config/util/app_globals.dart' as gbl;
+
 class PageHome extends StatefulWidget {
   const PageHome({super.key});
 
