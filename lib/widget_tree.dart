@@ -16,7 +16,7 @@ class _WidgetTreeState extends State<WidgetTree> {
     return StreamBuilder(
       stream: FireAuth().authStateChanges,
       builder: (context, snapshot) =>
-          snapshot.hasData ? const PageNaigationBar() : const PageWelcome(),
+          snapshot.hasData ? const PageNavigationBar() : const PageWelcome(),
     );
   }
 }

@@ -6,36 +6,34 @@ import 'package:simple_finances/features/home/page_goals.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 import 'package:simple_finances/features/home/page_home.dart';
 
-class PageNaigationBar extends StatefulWidget {
-  const PageNaigationBar({super.key});
+class PageNavigationBar extends StatefulWidget {
+  const PageNavigationBar({super.key});
 
   @override
-  State<PageNaigationBar> createState() => _PageNaigationBarState();
+  State<PageNavigationBar> createState() => _PageNavigationBarState();
 }
 
-class _PageNaigationBarState extends State<PageNaigationBar> {
+class _PageNavigationBarState extends State<PageNavigationBar> {
   int currentPageIndex = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: gbl.primaryDark,
-      extendBodyBehindAppBar: true,
-      extendBody: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
+        title: Text(
+          FireAuth().currentUser!.email.toString(),
+          style: TextStyle(
+              color: gbl.primaryLight, letterSpacing: 3, fontSize: 12),
+        ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MaterialButton(
-                onPressed: () => FireAuth().signOut(),
-                child: Icon(
-                  Icons.logout,
-                  color: gbl.primaryLight,
-                ),
-              )
-            ],
+          MaterialButton(
+            onPressed: () => FireAuth().signOut(),
+            child: Icon(
+              Icons.settings,
+              color: gbl.primaryLight,
+            ),
           )
         ],
       ),
@@ -55,6 +53,9 @@ class _PageNaigationBarState extends State<PageNaigationBar> {
           )
         ],
         selectedIndex: currentPageIndex,
+        backgroundColor: gbl.primaryDark,
+        indicatorColor: gbl.primaryLight,
+        surfaceTintColor: gbl.secondaryDark,
         onDestinationSelected: (value) {
           setState(() {
             currentPageIndex = value;
