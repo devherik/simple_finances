@@ -14,7 +14,7 @@ class PageNavigationBar extends StatefulWidget {
 }
 
 class _PageNavigationBarState extends State<PageNavigationBar> {
-  int currentPageIndex = 1;
+  int currentPageIndex = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,11 +25,16 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         title: Text(
           FireAuth().currentUser!.email.toString(),
           style: TextStyle(
-              color: gbl.primaryLight, letterSpacing: 3, fontSize: 12),
+            color: gbl.primaryLight,
+            letterSpacing: 3,
+            fontSize: 12,
+          ),
         ),
         actions: [
           MaterialButton(
             onPressed: () => FireAuth().signOut(),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: Icon(
               Icons.settings,
               color: gbl.primaryLight,

@@ -29,6 +29,8 @@ class _PageHomeState extends State<PageHome> {
         ),
         MaterialButton(
           onPressed: () {},
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: Icon(
             Icons.arrow_forward,
             color: gbl.primaryLight,
