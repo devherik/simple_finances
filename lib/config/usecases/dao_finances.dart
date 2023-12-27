@@ -16,15 +16,40 @@ class DaoFinances {
     }
   }
 
-  Future updateDatabaseBalance(
-      Map<String, dynamic> newBalance, DateTime date) async {
-    await _dataBase.updateDocument(
+  Future updateBalance(
+      DateTime date, Map<String, dynamic> updateValuers) async {
+    QuerySnapshot transactions = await _dataBase.getCollection(
+        '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/${date.day.toString()}');
+    DocumentSnapshot balanceSnapshot = await _dataBase.getDocument(
         '/simple_finances/finances/years/${date.year.toString()}/months',
-        date.month.toString(),
-        newBalance);
+        date.month.toString());
+    if (transactions.docs.isNotEmpty) {
+      updateValuers['type'] == 'income'
+          ? await _dataBase.updateDocument(
+              '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}',
+              date.day.toString(), <String, dynamic>{
+              'current_balance':
+                  balanceSnapshot['current_balance'] + updateValuers['value'],
+              'current_balance_state':
+                  balanceSnapshot['current_balance_state'] +
+                      updateValuers['value']
+            })
+          : await _dataBase.updateDocument(
+              '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}',
+              date.day.toString(), <String, dynamic>{
+              'current_balance':
+                  balanceSnapshot['current_balance'] - updateValuers['value'],
+              'current_balance_state':
+                  balanceSnapshot['current_balance_state'] +
+                      updateValuers['value']
+            });
+    } else {
+      // if it has no transactions, open a new balance with the data from previous day
+      if (date.day.toString() == '01') {
+        //chech if the month has changed
+      }
+    }
   }
-
-  updateBalance() {}
 
   getGoal() {}
   updateGoal() {}
