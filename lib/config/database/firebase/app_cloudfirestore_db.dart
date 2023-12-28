@@ -6,9 +6,15 @@ class CloudFirestoreDataBase {
   FirebaseFirestore get _firestoredatabase => FirebaseFirestore.instance;
 
   Future<void> persistDocument(
-      Map<String, dynamic> document, String path) async {
+      String path, Map<String, dynamic> document) async {
     // recevies a path and a map and persist it
     await _firestoredatabase.collection(path).add(document);
+  }
+
+  Future<void> persistDocumentWithID(
+      String path, String documentId, Map<String, dynamic> document) async {
+    // recevies a path, an id and a map and persist it
+    await _firestoredatabase.collection(path).doc(documentId).set(document);
   }
 
   Future<void> updateDocument(
@@ -19,6 +25,11 @@ class CloudFirestoreDataBase {
   Future<QuerySnapshot> getCollection(String path) async {
     // recevies a path to the collection and return it
     return await _firestoredatabase.collection(path).get();
+  }
+
+  Future<QuerySnapshot> getCollectionFiltered(String path, String query) async {
+    // recevies a path to the collection and return it
+    return await _firestoredatabase.collection(path).where(query).get();
   }
 
   Future<DocumentSnapshot> getDocument(String path, String document) async {

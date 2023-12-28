@@ -10,8 +10,8 @@ class DaoTransactions {
       Map<String, dynamic> newTransaction, DateTime date) async {
     await _dataBase
         .persistDocument(
-      newTransaction,
       '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/${date.day.toString()}',
+      newTransaction,
     )
         .whenComplete(() {
       if (kDebugMode) {
