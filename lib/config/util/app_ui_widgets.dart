@@ -104,6 +104,7 @@ class UiWidgets {
 
   void showMessage(String label, context) {
     final snack = SnackBar(
+      duration: const Duration(seconds: 1),
       content: Text(
         label,
         textAlign: TextAlign.center,

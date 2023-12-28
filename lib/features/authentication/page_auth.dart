@@ -13,14 +13,14 @@ class PageAuth extends StatefulWidget {
 }
 
 class _PageAuthState extends State<PageAuth> {
-  final _emailTextControll = TextEditingController();
-  final _passwordTextControll = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
   dynamic _imputColor = gbl.primaryLight;
 
   bool _checkInputs() {
     // check the data from textfields and return true if they are empty
-    if (_emailTextControll.text.trim().isEmpty ||
-        _passwordTextControll.text.trim().isEmpty) {
+    if (_emailTextController.text.trim().isEmpty ||
+        _passwordTextController.text.trim().isEmpty) {
       return true;
     } else {
       return false;
@@ -51,7 +51,7 @@ class _PageAuthState extends State<PageAuth> {
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
-                  controller: _emailTextControll,
+                  controller: _emailTextController,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   style: TextStyle(
@@ -88,7 +88,7 @@ class _PageAuthState extends State<PageAuth> {
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.visiblePassword,
-                  controller: _passwordTextControll,
+                  controller: _passwordTextController,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   maxLength: 6,
@@ -99,7 +99,9 @@ class _PageAuthState extends State<PageAuth> {
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 18, horizontal: 16),
                     suffixIcon: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/recovery');
+                      },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       splashColor: Colors.transparent,
@@ -175,8 +177,8 @@ class _PageAuthState extends State<PageAuth> {
                         } else {
                           FireAuth()
                               .signInWithEmailAndPassword(
-                                  email: _emailTextControll.text,
-                                  password: _passwordTextControll.text)
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
                               .onError(
                                 (error, stackTrace) => UiWidgets()
                                     .showMessage(error.toString(), context),
@@ -184,7 +186,7 @@ class _PageAuthState extends State<PageAuth> {
                               .whenComplete(() => context.go('/home'));
                           if (kDebugMode) {
                             print(
-                                '${_emailTextControll.text}, ${_passwordTextControll.text}');
+                                '${_emailTextController.text}, ${_passwordTextController.text}');
                           }
                         }
                       },
