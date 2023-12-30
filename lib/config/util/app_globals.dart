@@ -6,6 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 const String appTitle = 'Simple Finances';
 String centroLabel = '';
 const String backgroundImage = 'assets/worker_background.jpeg';
+const String simpleFinanceLogoFull =
+    'assets/simple_finance_logos/simple_finance_logo_transparent.png';
 
 const baseGreen = Color.fromARGB(255, 135, 238, 188);
 const baseRed = Color.fromARGB(255, 226, 141, 141);
