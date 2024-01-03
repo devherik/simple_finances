@@ -14,7 +14,7 @@ class PageNavigationBar extends StatefulWidget {
 }
 
 class _PageNavigationBarState extends State<PageNavigationBar> {
-  int currentPageIndex = 2;
+  int currentPageIndex = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         ),
         actions: [
           MaterialButton(
-            onPressed: () => FireAuth().signOut(),
+            onPressed: () async => await FireAuth().signOut(),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: Icon(
@@ -46,7 +46,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.track_changes),
-            label: 'Goals',
+            label: 'Objetivo',
           ),
           NavigationDestination(
             icon: Icon(Icons.home),
@@ -54,7 +54,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
           ),
           NavigationDestination(
             icon: Icon(Icons.money),
-            label: 'Finances',
+            label: 'Caixa',
           )
         ],
         selectedIndex: currentPageIndex,

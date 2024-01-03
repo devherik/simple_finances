@@ -160,7 +160,7 @@ class _PageAuthState extends State<PageAuth> {
                     MaterialButton(
                       padding: const EdgeInsets.symmetric(
                           vertical: 16, horizontal: 16),
-                      onPressed: () {},
+                      onPressed: () async {},
                       elevation: 4,
                       color: gbl.secondaryDark,
                       shape: RoundedRectangleBorder(

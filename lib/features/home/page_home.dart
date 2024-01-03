@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_finances/config/usecases/dao_finances.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
@@ -10,6 +11,9 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
+  final _daoFinance = DaoFinances();
+  dynamic _balanceCollection;
+
   Widget dailyEvent() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,27 +45,47 @@ class _PageHomeState extends State<PageHome> {
     );
   }
 
+  Future<void> _updatePage() async {
+    _balanceCollection =
+        await _daoFinance.getBalanceCollection(DateTime(2023, 12, 27));
+  }
+
   Widget dailyCard(String date) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              date,
-              style: TextStyle(
-                  color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
+    _updatePage();
+    return FutureBuilder(
+      future: _balanceCollection,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    date,
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 10,
+                        letterSpacing: 3),
+                  ),
+                ),
+                Divider(
+                  color: gbl.primaryLight,
+                ),
+                dailyEvent(),
+                dailyEvent(),
+                dailyEvent(),
+              ],
             ),
-          ),
-          Divider(
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
             color: gbl.primaryLight,
-          ),
-          dailyEvent(),
-          dailyEvent(),
-          dailyEvent(),
-        ],
-      ),
+          ));
+        }
+      },
     );
   }
 
@@ -98,12 +122,6 @@ class _PageHomeState extends State<PageHome> {
               height: 30,
             ),
             dailyCard('hoje - 28/11'),
-            dailyCard('sábado - 27/11'),
-            dailyCard('sexta - 26/11'),
-            dailyCard('quinta - 25/11'),
-            dailyCard('quarta - 24/11'),
-            dailyCard('terça - 23/11'),
-            dailyCard('segunda - 22/11'),
           ],
         ),
       ),

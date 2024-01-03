@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class FireAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -7,18 +8,30 @@ class FireAuth {
 
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on Exception catch (e) {
+      if (kDebugMode) print('exception -> $e');
+    }
   }
 
   Future<void> createUserWithEmailAndPassword(
       {required String email, required String password}) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } on Exception catch (e) {
+      if (kDebugMode) print('exception -> $e');
+    }
   }
 
   Future<void> resetPassword({required String email}) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on Exception catch (e) {
+      if (kDebugMode) print('exception -> $e');
+    }
   }
 
   String getUid() {
@@ -27,6 +40,10 @@ class FireAuth {
   }
 
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    try {
+      await _firebaseAuth.signOut();
+    } on Exception catch (e) {
+      if (kDebugMode) print('exception -> $e');
+    }
   }
 }

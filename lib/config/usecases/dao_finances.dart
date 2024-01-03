@@ -4,8 +4,8 @@ import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.d
 class DaoFinances {
   final _dataBase = CloudFirestoreDataBase();
 
-  Future<Map<String, dynamic>> getBalance(DateTime date) async {
-    DocumentSnapshot balanceSnapshot = await _dataBase.getDocument(
+  Map<String, dynamic> getBalance(DateTime date) {
+    dynamic balanceSnapshot = _dataBase.getDocument(
         '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days',
         date.day.toString());
     if (balanceSnapshot.exists) {
@@ -110,8 +110,21 @@ class DaoFinances {
     }
   }
 
-  Future<String> getGoal(DateTime date) async {
-    Map<String, dynamic> balanceMap = await getBalance(date);
+  List<Map<String, dynamic>> getBalanceCollection(DateTime date) {
+    List<Map<String, dynamic>> balancesList = [];
+    _dataBase
+        .getCollection(
+            '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days')
+        .then((collection) {
+      for (var doc in collection.docs) {
+        balancesList.add(doc as Map<String, dynamic>);
+      }
+    });
+    return balancesList;
+  }
+
+  String getGoal(DateTime date) {
+    Map<String, dynamic> balanceMap = getBalance(date);
     return balanceMap['goal_balance'].toString();
   }
 
