@@ -14,7 +14,7 @@ class PageNavigationBar extends StatefulWidget {
 }
 
 class _PageNavigationBarState extends State<PageNavigationBar> {
-  int currentPageIndex = 1;
+  int currentPageIndex = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +57,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
             label: 'Caixa',
           )
         ],
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: currentPageIndex,
         backgroundColor: gbl.primaryDark,
         indicatorColor: gbl.primaryLight,
@@ -72,6 +73,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         const PageHome(),
         const PageFinances()
       ][currentPageIndex],
+      extendBody: true,
     );
   }
 }

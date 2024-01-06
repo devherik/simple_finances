@@ -22,31 +22,20 @@ class CloudFirestoreDataBase {
     _firestoredatabase.collection(path).doc(documentId).update(newDocument);
   }
 
-  Future<dynamic> getCollection(String path) async {
+  Future<QuerySnapshot<Map<String, dynamic>>> getCollection(String path) async {
     // recevies a path to the collection and return it
-    await _firestoredatabase.collection(path).get().then((value) {
-      return value;
-    }).onError((error, stackTrace) {
-      return Future.delayed(const Duration(seconds: 2));
-    });
+    return await _firestoredatabase.collection(path).get();
   }
 
-  Future<dynamic> getCollectionFiltered(String path, String query) async {
+  Future<QuerySnapshot<Map<String, dynamic>>> getCollectionFiltered(
+      String path, String query) async {
     // recevies a path to the collection and return it
-    await _firestoredatabase.collection(path).where(query).get().then((value) {
-      return value;
-    }).onError((error, stackTrace) {
-      return Future.delayed(const Duration(seconds: 2));
-    });
+    return await _firestoredatabase.collection(path).where(query).get();
   }
 
-  Future<dynamic> getDocument(String path, String document) async {
+  Future<DocumentSnapshot> getDocument(String path, String document) async {
     // recevies a path to the document and return it
-    await _firestoredatabase.collection(path).doc(document).get().then((value) {
-      return value;
-    }).onError((error, stackTrace) {
-      return Future.delayed(const Duration(seconds: 2));
-    });
+    return await _firestoredatabase.collection(path).doc(document).get();
   }
 
   Future deleteDocument(String path, String document) async {

@@ -12,7 +12,7 @@ class PageHome extends StatefulWidget {
 
 class _PageHomeState extends State<PageHome> {
   final _daoFinance = DaoFinances();
-  dynamic _balanceCollection;
+  Future<List<Map<String, dynamic>>>? _balanceCollection;
 
   Widget dailyEvent() {
     return Row(
@@ -46,14 +46,15 @@ class _PageHomeState extends State<PageHome> {
   }
 
   Future<void> _updatePage() async {
-    _balanceCollection =
-        await _daoFinance.getBalanceCollection(DateTime(2023, 12, 27));
+    setState(() {
+      _balanceCollection =
+          _daoFinance.getBalanceCollection(DateTime(2023, 12, 27));
+    });
   }
 
   Widget dailyCard(String date) {
-    _updatePage();
-    return FutureBuilder(
-      future: _balanceCollection,
+    return StreamBuilder(
+      stream: _balanceCollection!.asStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
@@ -80,10 +81,14 @@ class _PageHomeState extends State<PageHome> {
             ),
           );
         } else {
-          return Center(
-              child: CircularProgressIndicator(
-            color: gbl.primaryLight,
-          ));
+          return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+                child: CircularProgressIndicator(
+              color: gbl.primaryLight,
+            )),
+          );
         }
       },
     );
@@ -91,38 +96,48 @@ class _PageHomeState extends State<PageHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    _updatePage();
+    return SingleChildScrollView(
+      child: RefreshIndicator(
+        onRefresh: _updatePage,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                Text(
-                  'Saldo do caixa',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 18, letterSpacing: 3),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Saldo do caixa',
+                      style: TextStyle(
+                          color: gbl.primaryLight,
+                          fontSize: 18,
+                          letterSpacing: 3),
+                    ),
+                    VerticalDivider(
+                      color: gbl.primaryLight,
+                      thickness: 1,
+                    ),
+                    Text(
+                      'Lucro',
+                      style: TextStyle(
+                          color: gbl.primaryLight,
+                          fontSize: 18,
+                          letterSpacing: 3),
+                    )
+                  ],
                 ),
-                VerticalDivider(
-                  color: gbl.primaryLight,
-                  thickness: 1,
+                const SizedBox(
+                  height: 30,
                 ),
-                Text(
-                  'Lucro',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 18, letterSpacing: 3),
-                )
+                dailyCard('hoje - 28/11'),
               ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            dailyCard('hoje - 28/11'),
-          ],
+          ),
         ),
       ),
     );
