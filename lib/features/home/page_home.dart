@@ -134,7 +134,7 @@ class _PageHomeState extends State<PageHome> {
                 const SizedBox(
                   height: 30,
                 ),
-                dailyCard('hoje - 28/11'),
+                dailyCard(DateTime.now().toString()),
               ],
             ),
           ),

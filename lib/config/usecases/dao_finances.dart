@@ -119,6 +119,7 @@ class DaoFinances {
       if (collection.docs.isNotEmpty) {
         for (var doc in collection.docs) {
           balancesList.add(<String, dynamic>{
+            'current_day': doc.id.toString(),
             'previous_day': doc['previous_day'],
             'initial_balance': doc['current_balance'],
             'current_balance': doc['current_balance'],
@@ -126,6 +127,11 @@ class DaoFinances {
             'goal_balance_state': doc['goal_balance_state'],
           });
         }
+      } else {
+        balancesList.add(<String, dynamic>{
+          'current_day': DateTime.now().day.toString(),
+          'current_balance': 0.0,
+        });
       }
     });
     return balancesList;

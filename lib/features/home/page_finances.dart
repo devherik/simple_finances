@@ -16,13 +16,11 @@ class _PageFinancesState extends State<PageFinances> {
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
   int monthIndex = DateTime.now().month;
-  Map<String, dynamic> monthBalance = {
-    'current_balance': 1600,
-    'id': 05,
-  };
+
   @override
   Widget build(BuildContext context) {
-    _updatePage();
+    daysWithTransactions =
+        _daoFinances.getBalanceCollection(DateTime(yearIndex, monthIndex));
     monthName(monthIndex);
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -91,16 +89,18 @@ class _PageFinancesState extends State<PageFinances> {
               stream: daysWithTransactions!.asStream(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data!.toString(),
-                    style: TextStyle(color: gbl.primaryLight),
-                  );
-                } else {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  );
+                  return dayBalance(snapshot.data!);
                 }
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width - 16,
+                  height: MediaQuery.of(context).size.height - 16,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(
+                      color: gbl.primaryLight,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -147,28 +147,35 @@ class _PageFinancesState extends State<PageFinances> {
     });
   }
 
-  Widget dayBalance(int day) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget dayBalance(List<Map<String, dynamic>> balanceMap) {
+    return ListView.builder(
+      shrinkWrap:
+          true, // made the list work, but seans not to be the best practice, intead perhaps I should use SliverList
+      itemCount: balanceMap.length,
+      itemBuilder: (context, index) {
+        return Column(
           children: [
-            Text(
-              'Dia ${monthBalance['id']}',
-              style: TextStyle(
-                  color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Dia ${balanceMap[index]['current_day']}',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
+                ),
+                Text(
+                  'R\$ ${balanceMap[index]['current_balance']}',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
+                ),
+              ],
             ),
-            Text(
-              'R\$ ${monthBalance['current_balance']}',
-              style: TextStyle(
-                  color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
+            Divider(
+              color: gbl.primaryLight,
             ),
           ],
-        ),
-        Divider(
-          color: gbl.primaryLight,
-        ),
-      ],
+        );
+      },
     );
   }
 }
