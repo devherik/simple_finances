@@ -17,10 +17,18 @@ class DaoTransactions {
       if (kDebugMode) {
         print('Transaction added');
       }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
     });
     await _daoFinances.updateBalance(date, newTransaction).whenComplete(() {
       if (kDebugMode) {
         print('Balance updated');
+      }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
       }
     });
   }
@@ -44,7 +52,11 @@ class DaoTransactions {
       } else {
         transactionList.add(<String, dynamic>{'type': 'empty'});
       }
-    }).onError((error, stackTrace) => null);
-    return await transactionList;
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
+    });
+    return transactionList;
   }
 }

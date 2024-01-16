@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.dart';
 
 class DaoFinances {
@@ -96,7 +97,11 @@ class DaoFinances {
                 'goal_balance_state': balanceSnapshot['goal_balance_state'] +
                     updateValuers['value'],
               },
-            )
+            ).onError((error, stackTrace) {
+              if (kDebugMode) {
+                print(error);
+              }
+            })
           : await _dataBase.updateDocument(
               '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days',
               date.day.toString(),
@@ -104,7 +109,11 @@ class DaoFinances {
                 'current_balance':
                     balanceSnapshot['current_balance'] - updateValuers['value'],
               },
-            );
+            ).onError((error, stackTrace) {
+              if (kDebugMode) {
+                print(error);
+              }
+            });
     } else {
       createBalance(date, updateValuers);
     }
@@ -133,19 +142,34 @@ class DaoFinances {
           'current_balance': 0.0,
         });
       }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
     });
     return balancesList;
   }
 
   Future<String> getGoal(DateTime date) async {
-    Map<String, dynamic> balanceMap = await getBalance(date);
+    Map<String, dynamic> balanceMap =
+        await getBalance(date).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
+      return <String, dynamic>{'goal_balance': error.toString()};
+    });
     return balanceMap['goal_balance'].toString();
   }
 
   Future updateGoal(DateTime date, String newGoal) async {
     await _dataBase.updateDocument(
         '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days',
-        date.day.toString(),
-        <String, dynamic>{'goal_balance': newGoal});
+        date.day.toString(), <String, dynamic>{
+      'goal_balance': newGoal
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+      }
+    });
   }
 }
