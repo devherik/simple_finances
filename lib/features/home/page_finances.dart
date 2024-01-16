@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/usecases/dao_finances.dart';
+import 'package:simple_finances/config/usecases/dao_transactions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
@@ -12,6 +14,7 @@ class PageFinances extends StatefulWidget {
 
 class _PageFinancesState extends State<PageFinances> {
   final _daoFinances = DaoFinances();
+  final _daoTransactions = DaoTransactions();
   Future<List<Map<String, dynamic>>>? daysWithTransactions;
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
@@ -173,9 +176,34 @@ class _PageFinancesState extends State<PageFinances> {
             Divider(
               color: gbl.primaryLight,
             ),
+            dayTransactions(balanceMap[index]['current_day'])
           ],
         );
       },
     );
+  }
+
+  Widget dayTransactions(String day) {
+    try {
+      Future<List<Map<String, dynamic>>> transactionsMap =
+          _daoTransactions.getTransactionsCollection(
+              DateTime(yearIndex, monthIndex, int.parse(day)));
+      return StreamBuilder(
+        stream: transactionsMap.asStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            for (var doc in snapshot.data!) {
+              return Text(doc.toString());
+            }
+          }
+          return Text('nothing to see here!');
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return SizedBox();
   }
 }

@@ -24,4 +24,27 @@ class DaoTransactions {
       }
     });
   }
+
+  Future<List<Map<String, dynamic>>> getTransactionsCollection(
+      DateTime date) async {
+    List<Map<String, dynamic>> transactionList = [];
+    await _dataBase
+        .getCollection(
+            'simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}')
+        .then((collection) {
+      if (collection.docs.isNotEmpty) {
+        for (var doc in collection.docs) {
+          transactionList.add(<String, dynamic>{
+            'timestamp': doc['timestamp'],
+            'type': doc['type'],
+            'value': doc['value'],
+            'description': doc['description']
+          });
+        }
+      } else {
+        transactionList.add(<String, dynamic>{'type': 'empty'});
+      }
+    }).onError((error, stackTrace) => null);
+    return await transactionList;
+  }
 }
