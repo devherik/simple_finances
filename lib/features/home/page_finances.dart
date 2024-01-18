@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/usecases/dao_finances.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
+import 'package:simple_finances/config/usecases/generic_functions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
@@ -15,6 +15,7 @@ class PageFinances extends StatefulWidget {
 class _PageFinancesState extends State<PageFinances> {
   final _daoFinances = DaoFinances();
   final _daoTransactions = DaoTransactions();
+  final _genericFunctions = GenericFunctions();
   Future<List<Map<String, dynamic>>>? daysWithTransactions;
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
@@ -153,7 +154,7 @@ class _PageFinancesState extends State<PageFinances> {
   Widget dayBalance(List<Map<String, dynamic>> balanceMap) {
     return ListView.builder(
       shrinkWrap:
-          true, // made the list work, but seans not to be the best practice, intead perhaps I should use SliverList
+          true, // made the list work, but it seans not to be the best practice, instead perhaps I should use SliverList
       itemCount: balanceMap.length,
       itemBuilder: (context, index) {
         return Column(
@@ -176,7 +177,7 @@ class _PageFinancesState extends State<PageFinances> {
             Divider(
               color: gbl.primaryLight,
             ),
-            dayTransactions(balanceMap[index]['current_day'])
+            dayTransactions(balanceMap[index]['current_day']),
           ],
         );
       },
@@ -184,26 +185,24 @@ class _PageFinancesState extends State<PageFinances> {
   }
 
   Widget dayTransactions(String day) {
-    try {
-      Future<List<Map<String, dynamic>>> transactionsMap =
-          _daoTransactions.getTransactionsCollection(
-              DateTime(yearIndex, monthIndex, int.parse(day)));
-      return StreamBuilder(
-        stream: transactionsMap.asStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            for (var doc in snapshot.data!) {
-              return Text(doc.toString());
-            }
-          }
-          return Text('nothing to see here!');
-        },
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-    return SizedBox();
+    Future<List<Map<String, dynamic>>> transactionsMap =
+        _daoTransactions.getTransactionsCollection(
+            DateTime(yearIndex, monthIndex, int.parse(day)));
+    return StreamBuilder(
+      stream: transactionsMap.asStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return Text(snapshot.data![index]['type']);
+            },
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
   }
 }

@@ -38,7 +38,7 @@ class DaoTransactions {
     List<Map<String, dynamic>> transactionList = [];
     await _dataBase
         .getCollection(
-            'simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}')
+            'simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}/transactions')
         .then((collection) {
       if (collection.docs.isNotEmpty) {
         for (var doc in collection.docs) {
