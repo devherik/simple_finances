@@ -14,7 +14,7 @@ class PageNavigationBar extends StatefulWidget {
 }
 
 class _PageNavigationBarState extends State<PageNavigationBar> {
-  int currentPageIndex = 2;
+  int currentPageIndex = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,30 +31,30 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
           ),
         ),
         actions: [
-          MaterialButton(
-            onPressed: () async => await FireAuth().signOut(),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: Icon(
-              Icons.settings,
-              color: gbl.primaryLight,
-            ),
-          )
+          // MaterialButton(
+          //   onPressed: () async => await FireAuth().signOut(),
+          //   shape:
+          //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          //   child: Icon(
+          //     Icons.settings,
+          //     color: gbl.primaryLight,
+          //   ),
+          // )
         ],
       ),
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.track_changes),
-            label: 'Objetivo',
+            label: 'Objetivos',
           ),
           NavigationDestination(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.money),
-            label: 'Caixa',
+            icon: Icon(Icons.settings),
+            label: 'Configurações',
           )
         ],
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -70,8 +70,8 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
       ),
       body: [
         const PageGoals(),
+        const PageFinances(),
         const PageHome(),
-        const PageFinances()
       ][currentPageIndex],
       extendBody: true,
     );

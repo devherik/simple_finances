@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/usecases/dao_finances.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
-import 'package:simple_finances/config/usecases/generic_functions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
@@ -15,7 +14,6 @@ class PageFinances extends StatefulWidget {
 class _PageFinancesState extends State<PageFinances> {
   final _daoFinances = DaoFinances();
   final _daoTransactions = DaoTransactions();
-  final _genericFunctions = GenericFunctions();
   Future<List<Map<String, dynamic>>>? daysWithTransactions;
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
@@ -196,7 +194,48 @@ class _PageFinancesState extends State<PageFinances> {
             shrinkWrap: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return Text(snapshot.data![index]['type']);
+              switch (snapshot.data![index]['type']) {
+                case 'empty':
+                  return const SizedBox();
+                case 'income':
+                  return Row(
+                    children: [
+                      const Icon(
+                        Icons.add,
+                        color: gbl.baseGreen,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
+                            style: TextStyle(color: gbl.primaryLight),
+                          )
+                        ],
+                      )
+                    ],
+                  );
+                case 'outcome':
+                  return Row(
+                    children: [
+                      const Icon(
+                        Icons.remove,
+                        color: gbl.baseRed,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
+                            style: TextStyle(color: gbl.primaryLight),
+                          )
+                        ],
+                      )
+                    ],
+                  );
+              }
+              return Text(
+                snapshot.data![index]['type'],
+                style: TextStyle(color: gbl.primaryLight),
+              );
             },
           );
         } else {
