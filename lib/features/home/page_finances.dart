@@ -198,38 +198,60 @@ class _PageFinancesState extends State<PageFinances> {
                 case 'empty':
                   return const SizedBox();
                 case 'income':
-                  return Row(
-                    children: [
-                      const Icon(
-                        Icons.add,
-                        color: gbl.baseGreen,
-                      ),
-                      Column(
+                  return Card(
+                    elevation: 5,
+                    borderOnForeground: true,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                    color: gbl.primaryDark,
+                    surfaceTintColor: gbl.baseGreen,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         children: [
-                          Text(
-                            '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
-                            style: TextStyle(color: gbl.primaryLight),
+                          const Icon(
+                            Icons.add,
+                            color: gbl.baseGreen,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                'R\$ ${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
+                                style: TextStyle(color: gbl.primaryLight),
+                              )
+                            ],
                           )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   );
                 case 'outcome':
-                  return Row(
-                    children: [
-                      const Icon(
-                        Icons.remove,
-                        color: gbl.baseRed,
-                      ),
-                      Column(
+                  return Card(
+                    elevation: 5,
+                    borderOnForeground: true,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                    color: gbl.primaryDark,
+                    surfaceTintColor: gbl.baseRed,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         children: [
-                          Text(
-                            '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
-                            style: TextStyle(color: gbl.primaryLight),
+                          const Icon(
+                            Icons.remove,
+                            color: gbl.baseRed,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
+                                style: TextStyle(color: gbl.primaryLight),
+                              )
+                            ],
                           )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   );
               }
               return Text(

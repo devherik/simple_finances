@@ -4,7 +4,7 @@ import 'package:simple_finances/features/home/page_finances.dart';
 import 'package:simple_finances/features/home/page_goals.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
-import 'package:simple_finances/features/home/page_home.dart';
+import 'package:simple_finances/features/home/page_transactions.dart';
 
 class PageNavigationBar extends StatefulWidget {
   const PageNavigationBar({super.key});
@@ -31,31 +31,23 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
           ),
         ),
         actions: [
-          // MaterialButton(
-          //   onPressed: () async => await FireAuth().signOut(),
-          //   shape:
-          //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          //   child: Icon(
-          //     Icons.settings,
-          //     color: gbl.primaryLight,
-          //   ),
-          // )
+          MaterialButton(
+            onPressed: () async => await FireAuth().signOut(),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: Icon(
+              Icons.settings,
+              color: gbl.primaryLight,
+            ),
+          )
         ],
       ),
       bottomNavigationBar: NavigationBar(
         destinations: const [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.add), label: 'Adicionar'),
           NavigationDestination(
-            icon: Icon(Icons.track_changes),
-            label: 'Objetivos',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Configurações',
-          )
+              icon: Icon(Icons.track_changes), label: 'Objetivos'),
         ],
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: currentPageIndex,
@@ -69,9 +61,9 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         },
       ),
       body: [
-        const PageGoals(),
         const PageFinances(),
-        const PageHome(),
+        const TransactionsPage(),
+        const PageGoals(),
       ][currentPageIndex],
       extendBody: true,
     );
