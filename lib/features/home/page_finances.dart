@@ -24,88 +24,95 @@ class _PageFinancesState extends State<PageFinances> {
     daysWithTransactions =
         _daoFinances.getBalanceCollection(DateTime(yearIndex, monthIndex));
     monthName(monthIndex);
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(10),
-      child: SingleChildScrollView(
-        child: Column(
+    return Scaffold(
+      backgroundColor: gbl.primaryDark,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: gbl.primaryDark,
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MaterialButton(
-                    onPressed: () {
-                      if (monthIndex == 1) {
-                        setState(() {
-                          monthIndex = 12;
-                          yearIndex -= 1;
-                        });
-                      } else {
-                        setState(() {
-                          monthIndex--;
-                        });
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: gbl.primaryLight,
-                    ),
-                  ),
-                  Text(
-                    '$currentMonth $yearIndex',
-                    style: TextStyle(
-                      color: gbl.primaryLight,
-                      letterSpacing: 3,
-                      fontSize: 20,
-                    ),
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      if (monthIndex == 12) {
-                        setState(() {
-                          monthIndex = 1;
-                          yearIndex += 1;
-                        });
-                      } else {
-                        setState(() {
-                          monthIndex++;
-                        });
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: gbl.primaryLight,
-                    ),
-                  ),
-                ],
+            MaterialButton(
+              onPressed: () {
+                if (monthIndex == 1) {
+                  setState(() {
+                    monthIndex = 12;
+                    yearIndex -= 1;
+                  });
+                } else {
+                  setState(() {
+                    monthIndex--;
+                  });
+                }
+              },
+              minWidth: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Icon(
+                Icons.arrow_back,
+                color: gbl.primaryLight,
               ),
             ),
-            StreamBuilder(
-              stream: daysWithTransactions!.asStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return dayBalance(snapshot.data!);
+            Text(
+              '$currentMonth $yearIndex',
+              style: TextStyle(
+                  color: gbl.primaryLight,
+                  letterSpacing: 3,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            MaterialButton(
+              onPressed: () {
+                if (monthIndex == 12) {
+                  setState(() {
+                    monthIndex = 1;
+                    yearIndex += 1;
+                  });
+                } else {
+                  setState(() {
+                    monthIndex++;
+                  });
                 }
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width - 16,
-                  height: MediaQuery.of(context).size.height - 16,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(
-                      color: gbl.primaryLight,
-                    ),
-                  ),
-                );
               },
+              minWidth: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Icon(
+                Icons.arrow_forward,
+                color: gbl.primaryLight,
+              ),
             ),
           ],
+        ),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 36),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              StreamBuilder(
+                stream: daysWithTransactions!.asStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return dayBalance(snapshot.data!);
+                  }
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width - 16,
+                    height: MediaQuery.of(context).size.height - 16,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        color: gbl.primaryLight,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
