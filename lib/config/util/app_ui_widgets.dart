@@ -34,21 +34,21 @@ class UiWidgets {
     );
   }
 
-  Widget basicMaterialButtom(
-      dynamic fun, String label, Color c, context, double minWidth) {
+  Widget basicMaterialButtom(dynamic fun, String label, Color backColor,
+      Color textColor, context, double minWidth) {
     return MaterialButton(
       onPressed: fun,
       elevation: 4,
-      color: c,
+      color: backColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-      splashColor: Colors.white12,
+      splashColor: textColor,
       onLongPress: null,
       minWidth: minWidth,
       child: Text(
         label,
         style: TextStyle(
-            color: Colors.white,
+            color: textColor,
             fontSize: 15,
             letterSpacing: 3,
             fontFamily: GoogleFonts.raleway().fontFamily),
@@ -63,40 +63,82 @@ class UiWidgets {
       controller: controller,
       textAlign: TextAlign.start,
       maxLines: 1,
-      style: const TextStyle(
-        fontSize: 15,
-        letterSpacing: 3,
-      ),
+      style:
+          TextStyle(fontSize: 15, letterSpacing: 3, color: gbl.secondaryLight),
       decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.blueGrey,
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
               width: 1,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.blueGrey,
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
               width: 1,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.blueGrey,
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
               width: 1,
             ),
           ),
           labelText: lable,
           labelStyle: TextStyle(
-              fontSize: 15, color: gbl.secondaryDark, letterSpacing: 3),
+              fontSize: 15, color: gbl.secondaryLight, letterSpacing: 3),
           hintText: hint,
           hintStyle: TextStyle(
-              fontSize: 14, color: gbl.secondaryDark, letterSpacing: 3),
+              fontSize: 14, color: gbl.secondaryLight, letterSpacing: 3),
+          filled: true,
+          fillColor: const Color(0x00ffffff)),
+    );
+  }
+
+  Widget basicNumberForm(String lable, String hint,
+      TextEditingController controller, TextInputType type) {
+    return TextField(
+      keyboardType: type,
+      controller: controller,
+      textAlign: TextAlign.start,
+      maxLines: 1,
+      style:
+          TextStyle(fontSize: 15, letterSpacing: 3, color: gbl.secondaryLight),
+      decoration: InputDecoration(
+          prefixText: 'R\$',
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
+              width: 1,
+            ),
+          ),
+          labelText: lable,
+          labelStyle: TextStyle(
+              fontSize: 15, color: gbl.secondaryLight, letterSpacing: 3),
+          hintStyle: TextStyle(
+              fontSize: 14, color: gbl.secondaryLight, letterSpacing: 3),
           filled: true,
           fillColor: const Color(0x00ffffff)),
     );

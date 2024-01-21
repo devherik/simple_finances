@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
+import 'package:simple_finances/config/util/app_ui_widgets.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -12,24 +13,21 @@ class TransactionsPage extends StatefulWidget {
 
 class _TransactionsPageState extends State<TransactionsPage> {
   DateTime _dataLabel = DateTime.now();
-  String? _transactionSelected;
+
+  final ui = UiWidgets();
+
+  final _descriptionTextController = TextEditingController();
+  final _valueTextController = TextEditingController();
 
   final _daoTransaction = DaoTransactions();
-  final _transactionTypesList = const [
-    DropdownMenuItem(
-      value: 'income',
-      child: Text('Entrada'),
-    ),
-    DropdownMenuItem(
-      value: 'outcome',
-      child: Text('Saída'),
-    ),
-  ];
 
-  final _meioQtdTextControll = TextEditingController();
-  final _inteiroQtdTextControll = TextEditingController();
-  final _volumeTextControll = TextEditingController();
-  final _notaFiscalTextControll = TextEditingController();
+  bool incomeButtonState = true;
+  Color incomeButtonBackColor = gbl.primaryLight;
+  Color incomeButtonTextColor = gbl.primaryDark;
+
+  bool outcomeButtonState = false;
+  Color outcomeButtonBackColor = gbl.primaryDark;
+  Color outcomeButtonTextColor = gbl.primaryLight;
 
   @override
   Widget build(BuildContext context) {
@@ -71,61 +69,129 @@ class _TransactionsPageState extends State<TransactionsPage> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
+          reverse: false,
           child: Column(
             children: [
-              DropdownButton<String>(
-                iconDisabledColor: Colors.blueGrey,
-                iconEnabledColor: Colors.black,
-                isExpanded: false,
-                dropdownColor: gbl.primaryDark,
-                borderRadius: BorderRadius.circular(15),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                value: _transactionSelected,
-                hint: Text(
-                  'Selecione o tipo de transação',
-                  style: TextStyle(color: gbl.primaryLight),
-                ),
-                icon: Icon(
-                  Icons.arrow_downward,
-                  color: gbl.primaryLight,
-                ),
-                elevation: 16,
-                style: TextStyle(
-                  color: gbl.primaryLight,
-                  fontSize: 15,
-                  letterSpacing: 3,
-                ),
-                alignment: Alignment.center,
-                underline: Container(
-                  height: 1,
-                  color: gbl.secondaryLight,
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _transactionSelected = value!;
-                  });
-                },
-                items: _transactionTypesList,
-              ),
-              _transactionSelected == 'income'
-                  ? Container(
-                      child: Text(
-                        'Tá entrando dinheiro!!!!!!',
-                        style: TextStyle(color: gbl.secondaryLight),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .7,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MaterialButton(
+                              onPressed: incomeButtonStateChange,
+                              elevation: 4,
+                              color: incomeButtonBackColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 18),
+                              onLongPress: null,
+                              minWidth: MediaQuery.of(context).size.width * .4,
+                              child: Text(
+                                'Income',
+                                style: TextStyle(
+                                    color: incomeButtonTextColor,
+                                    fontSize: 15,
+                                    letterSpacing: 3),
+                              )),
+                          MaterialButton(
+                              onPressed: outcomeButtonStateChange,
+                              elevation: 4,
+                              color: outcomeButtonBackColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 18),
+                              onLongPress: null,
+                              minWidth: MediaQuery.of(context).size.width * .4,
+                              child: Text(
+                                'Outcome',
+                                style: TextStyle(
+                                    color: outcomeButtonTextColor,
+                                    fontSize: 15,
+                                    letterSpacing: 3),
+                              )),
+                        ],
                       ),
-                    )
-                  : Container(
-                      child: Text(
-                        'Não deixa o dinheiro sair!!!!!',
-                        style: TextStyle(color: gbl.secondaryLight),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * .5,
+                        child: ui.basicNumberForm('Valor', "Informe o valor",
+                            _valueTextController, TextInputType.number),
                       ),
-                    )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: ui.basicTextForm(
+                          'Descrição',
+                          'Informe os detalhes',
+                          _descriptionTextController,
+                          TextInputType.text),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: ui.basicMaterialButtom(
+                          () {},
+                          'Salvar',
+                          gbl.primaryLight,
+                          gbl.primaryDark,
+                          context,
+                          MediaQuery.of(context).size.width),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  void incomeButtonStateChange() {
+    if (!incomeButtonState) {
+      setState(() {
+        incomeButtonState = true;
+        incomeButtonBackColor = gbl.primaryLight;
+        incomeButtonTextColor = gbl.primaryDark;
+        outcomeButtonState = false;
+        outcomeButtonBackColor = gbl.primaryDark;
+        outcomeButtonTextColor = gbl.primaryLight;
+      });
+    } else {
+      setState(() {
+        incomeButtonState = false;
+        incomeButtonBackColor = gbl.primaryDark;
+        incomeButtonTextColor = gbl.primaryLight;
+      });
+    }
+  }
+
+  void outcomeButtonStateChange() {
+    if (!outcomeButtonState) {
+      setState(() {
+        outcomeButtonState = true;
+        outcomeButtonBackColor = gbl.primaryLight;
+        outcomeButtonTextColor = gbl.primaryDark;
+        incomeButtonState = false;
+        incomeButtonBackColor = gbl.primaryDark;
+        incomeButtonTextColor = gbl.primaryLight;
+      });
+    } else {
+      setState(() {
+        outcomeButtonState = false;
+        outcomeButtonBackColor = gbl.primaryDark;
+        outcomeButtonTextColor = gbl.primaryLight;
+      });
+    }
   }
 }
