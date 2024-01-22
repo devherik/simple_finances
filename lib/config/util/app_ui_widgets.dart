@@ -51,6 +51,7 @@ class UiWidgets {
             color: textColor,
             fontSize: 15,
             letterSpacing: 3,
+            fontWeight: FontWeight.bold,
             fontFamily: GoogleFonts.raleway().fontFamily),
       ),
     );

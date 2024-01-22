@@ -77,7 +77,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .7,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -139,12 +139,30 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: ui.basicMaterialButtom(
-                          () {},
-                          'Salvar',
-                          gbl.primaryLight,
-                          gbl.primaryDark,
-                          context,
+                      child: ui.basicMaterialButtom(() {
+                        if (_valueTextController.text.isNotEmpty &&
+                            _descriptionTextController.text.isNotEmpty) {
+                          if (incomeButtonState) {
+                            _daoTransaction.persistTransaction(
+                                _dataLabel,
+                                'income',
+                                double.parse(_valueTextController.text),
+                                _descriptionTextController.text.trim());
+                          }
+                          if (outcomeButtonState) {
+                            _daoTransaction.persistTransaction(
+                                _dataLabel,
+                                'outcome',
+                                double.parse(_valueTextController.text),
+                                _descriptionTextController.text.trim());
+                          } else {
+                            ui.showMessage(
+                                'Selecione o tipo de transação.', context);
+                          }
+                        } else {
+                          ui.showMessage('Campo(s) vazio(s).', context);
+                        }
+                      }, 'Salvar', gbl.primaryLight, gbl.primaryDark, context,
                           MediaQuery.of(context).size.width),
                     ),
                   ],
