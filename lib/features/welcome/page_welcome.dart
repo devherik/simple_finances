@@ -44,10 +44,7 @@ class PageWelcome extends StatelessWidget {
               child: Text(
                 'Organize sua vida financeira de forma simples e prática. \n ',
                 style: TextStyle(
-                    fontSize: 30,
-                    color: gbl.primaryLight,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 3),
+                    fontSize: 30, color: gbl.primaryLight, letterSpacing: 3),
               ),
             )
           ],

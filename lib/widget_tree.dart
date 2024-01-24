@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
+import 'package:simple_finances/features/authentication/page_auth.dart';
 import 'package:simple_finances/features/home/page_navigationbar.dart';
-import 'package:simple_finances/features/welcome/page_welcome.dart';
 
 class WidgetTree extends StatefulWidget {
   const WidgetTree({super.key});
@@ -16,7 +16,7 @@ class _WidgetTreeState extends State<WidgetTree> {
     return StreamBuilder(
       stream: FireAuth().authStateChanges,
       builder: (context, snapshot) =>
-          snapshot.hasData ? const PageNavigationBar() : const PageWelcome(),
+          snapshot.hasData ? const PageNavigationBar() : const PageAuth(),
     );
   }
 }

@@ -13,14 +13,15 @@ class PageAuth extends StatefulWidget {
 }
 
 class _PageAuthState extends State<PageAuth> {
-  final _emailTextControll = TextEditingController();
-  final _passwordTextControll = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
   dynamic _imputColor = gbl.primaryLight;
+  bool _isLoading = false;
 
   bool _checkInputs() {
     // check the data from textfields and return true if they are empty
-    if (_emailTextControll.text.trim().isEmpty ||
-        _passwordTextControll.text.trim().isEmpty) {
+    if (_emailTextController.text.trim().isEmpty ||
+        _passwordTextController.text.trim().isEmpty) {
       return true;
     } else {
       return false;
@@ -30,6 +31,7 @@ class _PageAuthState extends State<PageAuth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: gbl.primaryDark,
       body: Container(
         color: gbl.primaryDark,
         height: MediaQuery.of(context).size.height,
@@ -40,18 +42,19 @@ class _PageAuthState extends State<PageAuth> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 80),
-                child: Text(
-                  'Simple Finances',
-                  style: TextStyle(
-                      color: gbl.primaryLight, letterSpacing: 3, fontSize: 60),
+                padding: const EdgeInsets.symmetric(vertical: 110),
+                child: Image.asset(
+                  gbl.simpleFinanceLogoFull,
+                  fit: BoxFit.cover,
+                  semanticLabel: 'Simple Finance Logo',
+                  width: MediaQuery.of(context).size.width * .7,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
-                  controller: _emailTextControll,
+                  controller: _emailTextController,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   style: TextStyle(
@@ -88,7 +91,7 @@ class _PageAuthState extends State<PageAuth> {
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextField(
                   keyboardType: TextInputType.visiblePassword,
-                  controller: _passwordTextControll,
+                  controller: _passwordTextController,
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   maxLength: 6,
@@ -99,7 +102,9 @@ class _PageAuthState extends State<PageAuth> {
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 18, horizontal: 16),
                     suffixIcon: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/recovery');
+                      },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       splashColor: Colors.transparent,
@@ -154,8 +159,8 @@ class _PageAuthState extends State<PageAuth> {
                   children: [
                     MaterialButton(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 18),
-                      onPressed: () {},
+                          vertical: 16, horizontal: 16),
+                      onPressed: () async {},
                       elevation: 4,
                       color: gbl.secondaryDark,
                       shape: RoundedRectangleBorder(
@@ -168,23 +173,26 @@ class _PageAuthState extends State<PageAuth> {
                       ),
                     ),
                     MaterialButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_checkInputs()) {
                           UiWidgets().showMessage(
                               'Confira seus dados e tente novamente.', context);
                         } else {
-                          FireAuth()
+                          setState(() => _isLoading = true);
+                          await FireAuth()
                               .signInWithEmailAndPassword(
-                                  email: _emailTextControll.text,
-                                  password: _passwordTextControll.text)
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
                               .onError(
                                 (error, stackTrace) => UiWidgets()
                                     .showMessage(error.toString(), context),
                               )
-                              .whenComplete(() => context.go('/home'));
+                              .whenComplete(() {
+                            context.go('/home');
+                          });
                           if (kDebugMode) {
                             print(
-                                '${_emailTextControll.text}, ${_passwordTextControll.text}');
+                                '${_emailTextController.text}, ${_passwordTextController.text}');
                           }
                         }
                       },
@@ -193,17 +201,21 @@ class _PageAuthState extends State<PageAuth> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
+                          horizontal: 8, vertical: 16),
                       splashColor: gbl.secondaryDark,
                       onLongPress: null,
                       minWidth: MediaQuery.of(context).size.width * .6,
-                      child: Text(
-                        'Entrar',
-                        style: TextStyle(
-                            letterSpacing: 3,
-                            fontSize: 20,
-                            color: gbl.primaryDark),
-                      ),
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              color: gbl.primaryDark,
+                            )
+                          : Text(
+                              'Entrar',
+                              style: TextStyle(
+                                  letterSpacing: 3,
+                                  fontSize: 20,
+                                  color: gbl.primaryDark),
+                            ),
                     ),
                   ],
                 ),
