@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
 import 'package:simple_finances/features/home/page_finances.dart';
 import 'package:simple_finances/features/home/page_goals.dart';
 

@@ -15,15 +15,21 @@ class DaoTransactions {
       'type': tyoe,
       'value': value
     };
-    await _dataBase
-        .persistDocument(
-            '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}/transactions',
-            transaction)
-        .onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error.toString());
-      }
-    });
+    await _daoFinances.createBalance(date).whenComplete(() async {
+      await _dataBase
+          .persistDocument(
+              '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}/transactions',
+              transaction)
+          .whenComplete(() async {
+        await _daoFinances
+            .updateBalance(date, transaction)
+            .onError((error, stackTrace) => null);
+      }).onError((error, stackTrace) {
+        if (kDebugMode) {
+          print(error.toString());
+        }
+      });
+    }).onError((error, stackTrace) => null);
   }
 
   Future updateDatabaseBalance(

@@ -148,8 +148,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                 'income',
                                 double.parse(_valueTextController.text),
                                 _descriptionTextController.text.trim());
-                          }
-                          if (outcomeButtonState) {
+                          } else if (outcomeButtonState) {
                             _daoTransaction.persistTransaction(
                                 _dataLabel,
                                 'outcome',

@@ -22,8 +22,7 @@ class DaoFinances {
     }
   }
 
-  Future createBalance(
-      DateTime date, Map<String, dynamic> updateValuers) async {
+  Future createBalance(DateTime date) async {
     // if it has no transactions, open a new balance with the data from previous day
     if (date.day == 01) {
       if (date.month == 01) {
@@ -115,7 +114,7 @@ class DaoFinances {
               }
             });
     } else {
-      createBalance(date, updateValuers);
+      createBalance(date);
     }
   }
 
