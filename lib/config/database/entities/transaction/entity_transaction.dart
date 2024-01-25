@@ -5,19 +5,19 @@ class EntityTransaction {
   String? _type;
   double? _value;
   Timestamp? _timestamp;
-  String? _financeId;
+  String? _cashflowId;
 
   EntityTransaction(
       {required String id,
       required String type,
       required double value,
       required Timestamp time,
-      required String financeId})
+      required String cashflowId})
       : _id = id,
         _type = type,
         _value = value,
         _timestamp = time,
-        _financeId = financeId;
+        _cashflowId = cashflowId;
 
   @override
   String toString() {
@@ -28,16 +28,16 @@ class EntityTransaction {
   String getType() => _type!;
   double getValue() => _value!;
   Timestamp getTimestamp() => _timestamp!;
-  String getFinanceId() => _financeId!;
+  String getFinanceId() => _cashflowId!;
   setType(value) => _type = value;
   setValue(value) => _value = value;
   setTimestamp(value) => _timestamp = value;
-  setFinanceId(value) => _financeId = value;
+  setFinanceId(value) => _cashflowId = value;
 
   updateTransaction(
       String type, double value, Timestamp time, String financeId) {
     _type = type;
     _value = value;
-    _financeId = financeId;
+    _cashflowId = financeId;
   }
 }

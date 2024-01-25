@@ -1,87 +1,76 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:simple_finances/config/database/entities/transaction/entity_order.dart';
+import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
 import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.dart';
-import 'package:simple_finances/config/usecases/dao_finances.dart';
+import 'package:simple_finances/config/usecases/dao_cashflow.dart';
+import 'package:simple_finances/config/util/app_ui_widgets.dart';
 
 class DaoTransactions {
   final _dataBase = CloudFirestoreDataBase();
-  final _daoFinances = DaoFinances();
+  final _daoCashflow = DaoCashflow();
+  final uiw = UiWidgets();
 
-  Future<void> persistTransaction(
-      DateTime date, String tyoe, double value, String description) async {
+  BuildContext? parentContext;
+
+  DaoTransactions({required BuildContext context}) : parentContext = context;
+
+  Future<void> persistTransaction(DateTime date, String type, double value,
+      String description, String cashflowId) async {
+    // by receiving a value (negative or positive), thie function persist a transaction, then update the cashflow open_value field
     final transaction = <String, dynamic>{
       'description': description,
       'timestamp': Timestamp.fromDate(date),
-      'type': tyoe,
+      'type': type,
       'value': value
     };
-    await _daoFinances.createBalance(date).whenComplete(() async {
-      await _dataBase
-          .persistDocument(
-              '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}/transactions',
-              transaction)
-          .whenComplete(() async {
-        await _daoFinances
-            .updateBalance(date, transaction)
-            .onError((error, stackTrace) => null);
-      }).onError((error, stackTrace) {
-        if (kDebugMode) {
-          print(error.toString());
-        }
-      });
-    }).onError((error, stackTrace) => null);
-  }
-
-  Future updateDatabaseBalance(
-      Map<String, dynamic> newTransaction, DateTime date) async {
+    final cashflow = await _daoCashflow.getCashflow(cashflowId);
+    final newValue = cashflow['open_value'] + value;
     await _dataBase
         .persistDocument(
-      '/simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}',
-      newTransaction,
-    )
-        .whenComplete(() {
-      if (kDebugMode) {
-        print('Transaction added');
-      }
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-      }
-    });
-    await _daoFinances.updateBalance(date, newTransaction).whenComplete(() {
-      if (kDebugMode) {
-        print('Balance updated');
-      }
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-      }
+            '/database/finance/cashflow/$cashflowId/transactions', transaction)
+        .whenComplete(
+            () async => await _daoCashflow.updateCashflow(cashflowId, newValue))
+        .onError((error, stackTrace) {
+      uiw.showMessage(error.toString(), parentContext);
     });
   }
 
-  Future<List<Map<String, dynamic>>> getTransactionsCollection(
-      DateTime date) async {
-    List<Map<String, dynamic>> transactionList = [];
+  Future<void> deleteTransaction(
+      String cashflowId, String transactionId) async {}
+
+  Future<void> updateTransaction(
+      String cashflowId, EntityTransaction transaction) async {
+    // update using the id of the transaction
+  }
+
+  Future<List<EntityTransaction>> getTransactionsCollection(
+      String cashflowId) async {
+    List<EntityTransaction> transactionList = [];
     await _dataBase
-        .getCollection(
-            'simple_finances/finances/years/${date.year.toString()}/months/${date.month.toString()}/days/${date.day.toString()}/transactions')
+        .getCollection('database/finance/cashflow/$cashflowId/transactions')
         .then((collection) {
       if (collection.docs.isNotEmpty) {
         for (var doc in collection.docs) {
-          transactionList.add(<String, dynamic>{
-            'timestamp': doc['timestamp'],
-            'type': doc['type'],
-            'value': doc['value'],
-            'description': doc['description']
-          });
+          doc['type'] == 'order'
+              ? transactionList.add(EntityOrder(
+                  id: doc.id,
+                  type: doc['type'],
+                  value: doc['value'],
+                  time: doc['timestamp'],
+                  cashflowId: cashflowId,
+                  customerId: doc['customer_id'],
+                  isPayd: doc['is_paid']))
+              : transactionList.add(EntityTransaction(
+                  id: doc.id,
+                  type: doc['type'],
+                  value: doc['value'],
+                  time: doc['timestamp'],
+                  cashflowId: cashflowId));
         }
-      } else {
-        transactionList.add(<String, dynamic>{'type': 'empty'});
       }
     }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-      }
+      uiw.showMessage(error.toString(), parentContext);
     });
     return transactionList;
   }

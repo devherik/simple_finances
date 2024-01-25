@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_finances/config/usecases/dao_finances.dart';
+import 'package:simple_finances/config/usecases/dao_cashflow.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
@@ -12,7 +12,7 @@ class PageFinances extends StatefulWidget {
 }
 
 class _PageFinancesState extends State<PageFinances> {
-  final _daoFinances = DaoFinances();
+  final _daoFinances = DaoCashflow();
   final _daoTransactions = DaoTransactions();
   Future<List<Map<String, dynamic>>>? daysWithTransactions;
   String currentMonth = '';

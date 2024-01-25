@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_finances/config/usecases/dao_finances.dart';
+import 'package:simple_finances/config/usecases/dao_cashflow.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
@@ -11,7 +11,7 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> {
-  final _daoFinance = DaoFinances();
+  final _daoFinance = DaoCashflow();
   Future<List<Map<String, dynamic>>>? _balanceCollection;
 
   Widget dailyEvent() {

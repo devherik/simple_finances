@@ -19,7 +19,10 @@ class CloudFirestoreDataBase {
 
   Future<void> updateDocument(
       String path, String documentId, Map<String, dynamic> newDocument) async {
-    _firestoredatabase.collection(path).doc(documentId).update(newDocument);
+    await _firestoredatabase
+        .collection(path)
+        .doc(documentId)
+        .update(newDocument);
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getCollection(String path) async {
