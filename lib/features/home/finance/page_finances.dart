@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
+import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
 import 'package:simple_finances/config/usecases/dao_cashflow.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
+import 'package:simple_finances/features/home/finance/widget_finances.dart';
 
 class PageFinances extends StatefulWidget {
   const PageFinances({super.key});
@@ -12,17 +15,19 @@ class PageFinances extends StatefulWidget {
 }
 
 class _PageFinancesState extends State<PageFinances> {
-  final _daoFinances = DaoCashflow();
-  final _daoTransactions = DaoTransactions();
-  Future<List<Map<String, dynamic>>>? daysWithTransactions;
+  DaoCashflow? _daoCashflow;
+  DaoTransactions? _daoTransactions;
+  EntityCashflow? _currentCashflow;
+  final wfinance = WidgetFinances();
+
+  List<EntityTransaction> _transactions = [];
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
   int monthIndex = DateTime.now().month;
 
   @override
   Widget build(BuildContext context) {
-    daysWithTransactions =
-        _daoFinances.getBalanceCollection(DateTime(yearIndex, monthIndex));
+    _setInstances(context);
     monthName(monthIndex);
     return Scaffold(
       backgroundColor: gbl.primaryDark,
@@ -92,36 +97,23 @@ class _PageFinancesState extends State<PageFinances> {
         padding: const EdgeInsets.only(left: 8, right: 8, top: 36),
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              StreamBuilder(
-                stream: daysWithTransactions!.asStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return dayBalance(snapshot.data!);
-                  }
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width - 16,
-                    height: MediaQuery.of(context).size.height - 16,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(
-                        color: gbl.primaryLight,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
+            children: [],
           ),
         ),
       ),
     );
   }
 
-  Future<void> _updatePage() async {
-    setState(() {
-      daysWithTransactions =
-          _daoFinances.getBalanceCollection(DateTime(yearIndex, monthIndex));
+  Future<void> _setInstances(BuildContext context) async {
+    _daoCashflow = DaoCashflow();
+    _daoTransactions = DaoTransactions(context: context);
+    _currentCashflow = await _daoCashflow!.getCurrentCashflow();
+  }
+
+  void _updatePage() {
+    setState(() async {
+      _transactions = await _daoTransactions!
+          .getTransactionsCollection(_currentCashflow!.getId());
     });
   }
 
@@ -182,94 +174,8 @@ class _PageFinancesState extends State<PageFinances> {
             Divider(
               color: gbl.primaryLight,
             ),
-            dayTransactions(balanceMap[index]['current_day']),
           ],
         );
-      },
-    );
-  }
-
-  Widget dayTransactions(String day) {
-    Future<List<Map<String, dynamic>>> transactionsMap =
-        _daoTransactions.getTransactionsCollection(
-            DateTime(yearIndex, monthIndex, int.parse(day)));
-    return StreamBuilder(
-      stream: transactionsMap.asStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              switch (snapshot.data![index]['type']) {
-                case 'empty':
-                  return const SizedBox();
-                case 'income':
-                  return Card(
-                    elevation: 5,
-                    borderOnForeground: true,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                    color: gbl.primaryDark,
-                    surfaceTintColor: gbl.baseGreen,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.add,
-                            color: gbl.baseGreen,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                'R\$ ${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
-                                style: TextStyle(color: gbl.primaryLight),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                case 'outcome':
-                  return Card(
-                    elevation: 5,
-                    borderOnForeground: true,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                    color: gbl.primaryDark,
-                    surfaceTintColor: gbl.baseRed,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.remove,
-                            color: gbl.baseRed,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                '${snapshot.data![index]['value']} \n${snapshot.data![index]['description']}',
-                                style: TextStyle(color: gbl.primaryLight),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-              }
-              return Text(
-                snapshot.data![index]['type'],
-                style: TextStyle(color: gbl.primaryLight),
-              );
-            },
-          );
-        } else {
-          return const SizedBox();
-        }
       },
     );
   }

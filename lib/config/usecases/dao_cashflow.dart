@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
 import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.dart';
 
 class DaoCashflow {
   final _dataBase = CloudFirestoreDataBase();
 
-  Future<void> persistCashflow(DateTime init, double openValue) async {
+  Future<void> persistCashflow(EntityCashflow cashflow) async {
     // open a new cashflow
-    Map<String, dynamic> cashflow = <String, dynamic>{
-      'init': Timestamp.fromDate(init),
-      'open_value': openValue,
-      'is_open': true
-    };
     await _dataBase
-        .persistDocument('/database/finance/cashflow', cashflow)
-        .onError((error, stackTrace) {
+        .persistDocument('/database/finance/cashflow', <String, dynamic>{
+      'init': cashflow.getInitTime(),
+      'open_value': cashflow.getOpenValue(),
+      'is_open': true
+    }).onError((error, stackTrace) {
       if (kDebugMode) {
         print('Persist Cashflow ERROR: $error');
       }
@@ -44,29 +43,81 @@ class DaoCashflow {
     });
   }
 
-  Future<Map<String, dynamic>> getCashflow(String id) async {
+  Future<EntityCashflow> getCurrentCashflow() async {
+    // when the finance page is loaded, the app try o get the current, open, cashflow,
+    // and, if it's closed, create a empty cashflow until a new one be opened
+    final finance = await _dataBase.getDocument('database', 'finance');
+    final cashflow = await _dataBase.getDocument(
+        'database/finance/cashflow', finance['current_cashflow']);
+    EntityCashflow? entity;
+    cashflow['is_open']
+        ? entity = EntityCashflow(
+            id: cashflow.id,
+            init: cashflow['init'],
+            openValue: cashflow['open_value'],
+            isOpen: cashflow['is_open'])
+        : entity = EntityCashflow(
+            id: '', init: Timestamp.now(), openValue: 0, isOpen: true);
+    return entity;
+  }
+
+  Future<EntityCashflow> getCashflow(String id) async {
     // return a cashflow searched by the id
     final cashflow =
         await _dataBase.getDocument('/database/finance/cashflow', id);
     if (cashflow.exists) {
-      return cashflow as Map<String, dynamic>;
+      if (cashflow['is_open']) {
+        return EntityCashflow(
+          id: cashflow.id,
+          init: cashflow['init'],
+          openValue: cashflow['open_value'],
+          isOpen: cashflow['is_open'],
+        );
+      } else {
+        EntityCashflow entity = EntityCashflow(
+          id: cashflow.id,
+          init: cashflow['init'],
+          openValue: cashflow['open_value'],
+          isOpen: cashflow['is_open'],
+        );
+        entity.setCloseTime(cashflow['end']);
+        entity.setCloseValue(cashflow['close_value']);
+        return entity;
+      }
     } else {
-      return <String, dynamic>{};
+      return EntityCashflow(
+        id: '',
+        init: Timestamp.now(),
+        openValue: 0,
+        isOpen: true,
+      );
     }
   }
 
-  Future<QuerySnapshot> getCashflows() async {
+  Future<List<EntityCashflow>> getCashflows() async {
     // return a collection with all cashflows on the database, filtered by date of openning
     // that way will simplify the database storage by not creating a collection for each year, month or day
     final collection =
         await _dataBase.getCollection('/database/finance/cashflow');
+    List<EntityCashflow> cashflows = [];
     if (collection.docs.isNotEmpty) {
-      collection.docs.sort(
-        (a, b) => b.data()['timestamp'].compareTo(a.data()['timestamp']),
+      for (var doc in collection.docs) {
+        EntityCashflow entity = EntityCashflow(
+          id: doc.id,
+          init: doc['init'],
+          openValue: doc['open_value'],
+          isOpen: doc['is_open'],
+        );
+        entity.setCloseTime(doc['end']);
+        entity.setCloseValue(doc['close_value']);
+        cashflows.add(entity);
+      }
+      cashflows.sort(
+        (a, b) => b.getInitTime().compareTo(a.getInitTime()),
       );
-      return collection;
+      return cashflows;
     } else {
-      return collection;
+      return cashflows;
     }
   }
 }

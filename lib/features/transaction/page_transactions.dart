@@ -19,7 +19,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   final _descriptionTextController = TextEditingController();
   final _valueTextController = TextEditingController();
 
-  final _daoTransaction = DaoTransactions();
+  // final _daoTransaction = DaoTransactions();
 
   bool incomeButtonState = true;
   Color incomeButtonBackColor = gbl.primaryLight;
@@ -143,17 +143,17 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         if (_valueTextController.text.isNotEmpty &&
                             _descriptionTextController.text.isNotEmpty) {
                           if (incomeButtonState) {
-                            _daoTransaction.persistTransaction(
-                                _dataLabel,
-                                'income',
-                                double.parse(_valueTextController.text),
-                                _descriptionTextController.text.trim());
+                            // _daoTransaction.persistTransaction(
+                            //     _dataLabel,
+                            //     'income',
+                            //     double.parse(_valueTextController.text),
+                            //     _descriptionTextController.text.trim());
                           } else if (outcomeButtonState) {
-                            _daoTransaction.persistTransaction(
-                                _dataLabel,
-                                'outcome',
-                                double.parse(_valueTextController.text),
-                                _descriptionTextController.text.trim());
+                            // _daoTransaction.persistTransaction(
+                            //     _dataLabel,
+                            //     'outcome',
+                            //     double.parse(_valueTextController.text),
+                            //     _descriptionTextController.text.trim());
                           } else {
                             ui.showMessage(
                                 'Selecione o tipo de transação.', context);

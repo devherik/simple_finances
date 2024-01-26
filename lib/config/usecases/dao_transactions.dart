@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/database/entities/transaction/entity_order.dart';
 import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
@@ -11,29 +10,32 @@ class DaoTransactions {
   final _daoCashflow = DaoCashflow();
   final uiw = UiWidgets();
 
-  BuildContext? parentContext;
+  dynamic parentContext;
 
   DaoTransactions({required BuildContext context}) : parentContext = context;
 
-  Future<void> persistTransaction(DateTime date, String type, double value,
-      String description, String cashflowId) async {
-    // by receiving a value (negative or positive), thie function persist a transaction, then update the cashflow open_value field
-    final transaction = <String, dynamic>{
-      'description': description,
-      'timestamp': Timestamp.fromDate(date),
-      'type': type,
-      'value': value
-    };
+  Future<void> persistTransaction(
+      EntityTransaction transaction, String cashflowId) async {
+    // by receiving a value (negative or positive), this function persist a transaction, then update the cashflow open_value field
     final cashflow = await _daoCashflow.getCashflow(cashflowId);
-    final newValue = cashflow['open_value'] + value;
+    double newValue;
+    transaction.getType() == 'order'
+        ? newValue = cashflow.getOpenValue() + transaction.getValue()
+        : newValue = cashflow.getOpenValue() - transaction.getValue();
     await _dataBase
         .persistDocument(
-            '/database/finance/cashflow/$cashflowId/transactions', transaction)
+            '/database/finance/cashflow/$cashflowId/transactions',
+            <String, dynamic>{
+              'description': transaction.getDescription(),
+              'timestamp': transaction.getTimestamp(),
+              'type': transaction.getType(),
+              'value': transaction.getValue()
+            })
         .whenComplete(
             () async => await _daoCashflow.updateCashflow(cashflowId, newValue))
         .onError((error, stackTrace) {
-      uiw.showMessage(error.toString(), parentContext);
-    });
+          uiw.showMessage(error.toString(), parentContext);
+        });
   }
 
   Future<void> deleteTransaction(
@@ -57,6 +59,7 @@ class DaoTransactions {
                   id: doc.id,
                   type: doc['type'],
                   value: doc['value'],
+                  description: doc['description'],
                   time: doc['timestamp'],
                   cashflowId: cashflowId,
                   customerId: doc['customer_id'],
@@ -65,6 +68,7 @@ class DaoTransactions {
                   id: doc.id,
                   type: doc['type'],
                   value: doc['value'],
+                  description: doc['description'],
                   time: doc['timestamp'],
                   cashflowId: cashflowId));
         }

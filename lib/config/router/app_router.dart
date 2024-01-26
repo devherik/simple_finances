@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:simple_finances/features/authentication/page_auth.dart';
 import 'package:simple_finances/features/authentication/page_recovery.dart';
-import 'package:simple_finances/features/home/page_home.dart';
+import 'package:simple_finances/features/home/page_navigationbar.dart';
 import 'package:simple_finances/features/welcome/page_welcome.dart';
 import 'package:simple_finances/widget_tree.dart';
 
@@ -16,8 +16,8 @@ class AppRouter {
       builder: (context, state) => const PageRecovery(),
     ),
     GoRoute(
-      path: '/home',
-      builder: (context, state) => const PageHome(),
+      path: '/navigation',
+      builder: (context, state) => const PageNavigationBar(),
     ),
     GoRoute(
       path: '/widgettree',
