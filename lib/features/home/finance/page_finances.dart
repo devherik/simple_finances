@@ -17,13 +17,13 @@ class PageFinances extends StatefulWidget {
 class _PageFinancesState extends State<PageFinances> {
   DaoCashflow? _daoCashflow;
   DaoTransactions? _daoTransactions;
-  EntityCashflow? _currentCashflow;
+  Future<EntityCashflow>? _currentCashflow;
   WidgetFinances? wfinance;
   String appBarTitle = 'Caixa';
   late ScrollController _scrollController;
   double _scrollControllerOffset = 0.0;
 
-  List<EntityTransaction> _transactions = [];
+  Future<List<EntityTransaction>>? _transactions;
   String currentMonth = '';
   int yearIndex = DateTime.now().year;
   int monthIndex = DateTime.now().month;
@@ -64,32 +64,53 @@ class _PageFinancesState extends State<PageFinances> {
       //     )
       //   ],
       // ),
-      body: Stack(
-        children: [
-          wfinance!.scrollAppBarClinch(_scrollControllerOffset),
-          CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 1.5,
-                  child: Icon(
-                    Icons.rocket,
-                    color: gbl.primaryLight,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+        ),
+        child: Stack(
+          children: [
+            FutureBuilder(
+              future: _currentCashflow,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return wfinance!.scrollAppBarClinch(
+                      _scrollControllerOffset, snapshot.data!);
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: gbl.primaryLight,
+                    ),
+                  );
+                }
+              },
+            ),
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 1.5,
+                    child: Icon(
+                      Icons.rocket,
+                      color: gbl.primaryLight,
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-        ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   _updatePage() async {
-    _currentCashflow = await _daoCashflow!.getCurrentCashflow();
-    _transactions = await _daoTransactions!
-        .getTransactionsCollection(_currentCashflow!.getId());
+    _currentCashflow = _daoCashflow!.getCurrentCashflow();
+    // _transactions = _daoTransactions!
+    //     .getTransactionsCollection(_currentCashflow!.getId());
   }
 
   _scrollListener() {

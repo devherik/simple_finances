@@ -23,6 +23,11 @@ class EntityCashflow {
   int getCloseValue() => _closeValue!;
   bool getState() => _isOpen!;
   Timestamp getInitTime() => _init!;
+  String getInitTimeToString() {
+    final time = _init!.toDate();
+    return '${time.day}/${time.month}/${time.year}';
+  }
+
   Timestamp getEndTime() => _end!;
   setOpenValue(int value) => _openValue = value;
   setCloseValue(int value) => _closeValue = value;

@@ -71,6 +71,7 @@ flutter:
     - assets/illustrations/forgot_password.svg
     - assets/simple_finance_logos/simple_finance_logo_white_transparent.png
     - assets/simple_finance_logos/simple_finance_logo_transparent.png
+    - assets/brown_gradient.jpeg
 
   #   - images/a_dot_ham.jpeg
 

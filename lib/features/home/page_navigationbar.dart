@@ -17,7 +17,6 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: gbl.primaryDark,
       // appBar: AppBar(
       //   elevation: 0,
       //   backgroundColor: Colors.transparent,
@@ -50,7 +49,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
         ],
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: currentPageIndex,
-        backgroundColor: gbl.primaryDark,
+        backgroundColor: Colors.transparent,
         indicatorColor: gbl.primaryLight,
         surfaceTintColor: gbl.secondaryDark,
         onDestinationSelected: (value) {
