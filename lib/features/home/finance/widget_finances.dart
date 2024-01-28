@@ -17,7 +17,7 @@ class WidgetFinances {
         top: false,
         child: Container(
           height: size,
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           color: Colors.transparent.withOpacity(0.1),
           child: SafeArea(
             child: SizedBox(
@@ -144,12 +144,88 @@ class WidgetFinances {
     return ListView.builder(
       itemCount: transactions.length,
       itemBuilder: (context, index) {
-        return Card(
-          child: Text(
-            transactions[index].getId(),
-            style: TextStyle(color: gbl.primaryLight, fontSize: 22),
-          ),
-        );
+        if (transactions[index].getType() == 'order') {
+          return GestureDetector(
+            onTap: () {},
+            child: Card(
+              color: Colors.transparent.withOpacity(0.1),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.shopping_bag,
+                          color: gbl.baseBlue,
+                        ),
+                        Text(
+                          'pedido',
+                          style: TextStyle(color: gbl.baseBlue, fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
+                      style: TextStyle(color: gbl.primaryLight, fontSize: 22),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        } else {
+          return GestureDetector(
+            onTap: () {},
+            child: Card(
+              color: Colors.transparent.withOpacity(0.1),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    transactions[index].getType() == 'income'
+                        ? const Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_downward,
+                                color: gbl.baseGreen,
+                              ),
+                              Text(
+                                'entrada',
+                                style: TextStyle(
+                                    color: gbl.baseGreen, fontSize: 10),
+                              ),
+                            ],
+                          )
+                        : const Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_upward,
+                                color: gbl.baseRed,
+                              ),
+                              Text(
+                                'saída',
+                                style:
+                                    TextStyle(color: gbl.baseRed, fontSize: 10),
+                              ),
+                            ],
+                          ),
+                    Text(
+                      'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
+                      style: TextStyle(color: gbl.primaryLight, fontSize: 22),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
       },
     );
   }

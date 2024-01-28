@@ -17,29 +17,6 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   title: Text(
-      //     FireAuth().currentUser!.email.toString(),
-      //     style: TextStyle(
-      //       color: gbl.primaryLight,
-      //       letterSpacing: 3,
-      //       fontSize: 12,
-      //     ),
-      //   ),
-      //   actions: [
-      //     MaterialButton(
-      //       onPressed: () async => await FireAuth().signOut(),
-      //       shape:
-      //           RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      //       child: Icon(
-      //         Icons.settings,
-      //         color: gbl.primaryLight,
-      //       ),
-      //     )
-      //   ],
-      // ),
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

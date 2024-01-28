@@ -33,7 +33,7 @@ class DaoCashflow {
     });
   }
 
-  Future<void> updateCashflow(String id, int value) async {
+  Future<void> updateCashflow(String id, double value) async {
     // when a transction be done, it will send a value already calculated that will be used to update de cashflow
     await _dataBase.updateDocument('database/finance/cashflow', id,
         <String, dynamic>{'open_value': value}).onError((error, stackTrace) {
@@ -54,7 +54,7 @@ class DaoCashflow {
         ? entity = EntityCashflow(
             id: cashflow.id,
             init: cashflow['init'],
-            openValue: cashflow['open_value'],
+            openValue: double.parse(cashflow['open_value'].toString()),
             isOpen: cashflow['is_open'])
         : entity = EntityCashflow(
             id: '', init: Timestamp.now(), openValue: 0, isOpen: true);

@@ -4,7 +4,7 @@ class EntityTransaction {
   final String? _id;
   String? _type;
   String? _description;
-  int? _value;
+  double? _value;
   Timestamp? _timestamp;
   String? _cashflowId;
 
@@ -12,7 +12,7 @@ class EntityTransaction {
       {required String id,
       required String type,
       required String description,
-      required int value,
+      required double value,
       required Timestamp time,
       required String cashflowId})
       : _id = id,
@@ -30,8 +30,13 @@ class EntityTransaction {
   String getId() => _id!;
   String getType() => _type!;
   String getDescription() => _description!;
-  int getValue() => _value!;
+  double getValue() => _value!;
   Timestamp getTimestamp() => _timestamp!;
+  String getInitTimeToString() {
+    final time = _timestamp!.toDate();
+    return '${time.day}/${time.month}/${time.year}';
+  }
+
   String getFinanceId() => _cashflowId!;
   setType(value) => _type = value;
   setValue(value) => _value = value;
@@ -39,7 +44,8 @@ class EntityTransaction {
   setTimestamp(value) => _timestamp = value;
   setFinanceId(value) => _cashflowId = value;
 
-  updateTransaction(String type, int value, Timestamp time, String financeId) {
+  updateTransaction(
+      String type, double value, Timestamp time, String financeId) {
     _type = type;
     _value = value;
     _cashflowId = financeId;

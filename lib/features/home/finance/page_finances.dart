@@ -56,32 +56,32 @@ class _PageFinancesState extends State<PageFinances> {
             if (cashflow.hasData) {
               _transactions = _daoTransactions!
                   .getTransactionsCollection(cashflow.data!.getId());
-              return Stack(
-                children: [
-                  wfinance!.scrollAppBarCashflow(
-                      _scrollControllerOffset, cashflow.data!),
-                  CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 1.5,
-                          child: StreamBuilder(
-                            stream: _transactions!.asStream(),
-                            builder: (context, transactions) {
-                              if (transactions.hasData) {
-                                return wfinance!.listTransactionsCashflow(
-                                    transactions.data!);
-                              } else {
-                                return SizedBox();
-                              }
-                            },
-                          ),
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    wfinance!.scrollAppBarCashflow(
+                        _scrollControllerOffset, cashflow.data!),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 10),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: StreamBuilder(
+                          stream: _transactions!.asStream(),
+                          builder: (context, transactions) {
+                            if (transactions.hasData) {
+                              return wfinance!
+                                  .listTransactionsCashflow(transactions.data!);
+                            } else {
+                              return SizedBox();
+                            }
+                          },
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else {
               return Center(
