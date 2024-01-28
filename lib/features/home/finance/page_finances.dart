@@ -19,6 +19,9 @@ class _PageFinancesState extends State<PageFinances> {
   DaoTransactions? _daoTransactions;
   EntityCashflow? _currentCashflow;
   final wfinance = WidgetFinances();
+  String appBarTitle = 'Caixa';
+  late ScrollController _scrollController;
+  double _scrollControllerOffset = 0.0;
 
   List<EntityTransaction> _transactions = [];
   String currentMonth = '';
@@ -26,126 +29,90 @@ class _PageFinancesState extends State<PageFinances> {
   int monthIndex = DateTime.now().month;
 
   @override
+  void initState() {
+    _daoCashflow = DaoCashflow();
+    _daoTransactions = DaoTransactions(context: context);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    _updatePage();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _setInstances(context);
-    monthName(monthIndex);
     return Scaffold(
       backgroundColor: gbl.primaryDark,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: gbl.primaryDark,
-        centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            MaterialButton(
-              onPressed: () {
-                if (monthIndex == 1) {
-                  setState(() {
-                    monthIndex = 12;
-                    yearIndex -= 1;
-                  });
-                } else {
-                  setState(() {
-                    monthIndex--;
-                  });
-                }
-              },
-              minWidth: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              child: Icon(
-                Icons.arrow_back,
-                color: gbl.primaryLight,
-              ),
-            ),
-            Text(
-              '$currentMonth $yearIndex',
-              style: TextStyle(
-                  color: gbl.primaryLight,
-                  letterSpacing: 3,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            MaterialButton(
-              onPressed: () {
-                if (monthIndex == 12) {
-                  setState(() {
-                    monthIndex = 1;
-                    yearIndex += 1;
-                  });
-                } else {
-                  setState(() {
-                    monthIndex++;
-                  });
-                }
-              },
-              minWidth: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              child: Icon(
-                Icons.arrow_forward,
-                color: gbl.primaryLight,
-              ),
-            ),
-          ],
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: gbl.primaryDark,
+      //   centerTitle: true,
+      //   title: Text(
+      //     appBarTitle,
+      //     style: TextStyle(color: gbl.primaryLight),
+      //   ),
+      //   actions: [
+      //     MaterialButton(
+      //       onPressed: () {},
+      //       shape:
+      //           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      //       splashColor: gbl.primaryLight,
+      //       child: Icon(
+      //         Icons.share,
+      //         color: gbl.primaryLight,
+      //       ),
+      //     )
+      //   ],
+      // ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.only(left: 8, right: 8, top: 36),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [],
-          ),
+        child: Stack(
+          children: [
+            PreferredSize(
+                preferredSize: Size(MediaQuery.of(context).size.width, 20),
+                child: scrollAppBarClinch(_scrollControllerOffset)),
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 1.5,
+                    child: Icon(
+                      Icons.rocket,
+                      color: gbl.primaryLight,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> _setInstances(BuildContext context) async {
-    _daoCashflow = DaoCashflow();
-    _daoTransactions = DaoTransactions(context: context);
+  _updatePage() async {
     _currentCashflow = await _daoCashflow!.getCurrentCashflow();
+    _transactions = await _daoTransactions!
+        .getTransactionsCollection(_currentCashflow!.getId());
   }
 
-  void _updatePage() {
-    setState(() async {
-      _transactions = await _daoTransactions!
-          .getTransactionsCollection(_currentCashflow!.getId());
-    });
-  }
-
-  void monthName(int numeric) {
+  _scrollListener() {
     setState(() {
-      switch (numeric) {
-        case 1:
-          currentMonth = 'Janeiro';
-        case 2:
-          currentMonth = 'Fevereiro';
-        case 3:
-          currentMonth = 'Março';
-        case 4:
-          currentMonth = 'Abril';
-        case 5:
-          currentMonth = 'Maio';
-        case 6:
-          currentMonth = 'Junho';
-        case 7:
-          currentMonth = 'Julho';
-        case 8:
-          currentMonth = 'Agosto';
-        case 9:
-          currentMonth = 'Setembro';
-        case 10:
-          currentMonth = 'Outubro';
-        case 11:
-          currentMonth = 'Novembro';
-        case 12:
-          currentMonth = 'Dezembro';
-      }
+      _scrollControllerOffset = _scrollController.offset;
     });
+  }
+
+  Widget scrollAppBarClinch(double size) {
+    return SafeArea(
+        top: false,
+        child: Container(
+          height: 200,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+          color: Colors.white.withOpacity((size / 350).clamp(0, 1).toDouble()),
+          child: SafeArea(child: Container()),
+        ));
   }
 
   Widget dayBalance(List<Map<String, dynamic>> balanceMap) {

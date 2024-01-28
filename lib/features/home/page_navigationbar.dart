@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:simple_finances/features/home/page_finances.dart';
+import 'package:simple_finances/features/home/finance/page_finances.dart';
 import 'package:simple_finances/features/home/page_goals.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
-import 'package:simple_finances/features/home/page_transactions.dart';
+import 'package:simple_finances/features/transaction/page_transactions.dart';
 
 class PageNavigationBar extends StatefulWidget {
   const PageNavigationBar({super.key});
