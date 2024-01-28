@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
+import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
 class WidgetFinances {
@@ -7,7 +8,7 @@ class WidgetFinances {
 
   WidgetFinances({required BuildContext context}) : _context = context;
 
-  Widget scrollAppBarClinch(double scrollPosition, EntityCashflow cashflow) {
+  Widget scrollAppBarCashflow(double scrollPosition, EntityCashflow cashflow) {
     // to create an adaptive appbar, this widget uses the scroll position to
     // resize the container and realocate the widgets inside of it
     double size = scrollPosition <= 100 ? 200 - scrollPosition : 100;
@@ -137,5 +138,19 @@ class WidgetFinances {
         ),
       );
     }
+  }
+
+  Widget listTransactionsCashflow(List<EntityTransaction> transactions) {
+    return ListView.builder(
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: Text(
+            transactions[index].getId(),
+            style: TextStyle(color: gbl.primaryLight, fontSize: 22),
+          ),
+        );
+      },
+    );
   }
 }

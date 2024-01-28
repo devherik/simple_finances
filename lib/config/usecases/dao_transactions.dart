@@ -18,7 +18,7 @@ class DaoTransactions {
       EntityTransaction transaction, String cashflowId) async {
     // by receiving a value (negative or positive), this function persist a transaction, then update the cashflow open_value field
     final cashflow = await _daoCashflow.getCashflow(cashflowId);
-    double newValue;
+    int newValue;
     transaction.getType() == 'order'
         ? newValue = cashflow.getOpenValue() + transaction.getValue()
         : newValue = cashflow.getOpenValue() - transaction.getValue();

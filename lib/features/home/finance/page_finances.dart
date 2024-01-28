@@ -44,64 +44,53 @@ class _PageFinancesState extends State<PageFinances> {
     return Scaffold(
       backgroundColor: gbl.primaryDark,
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: gbl.primaryDark,
-      //   centerTitle: true,
-      //   title: Text(
-      //     appBarTitle,
-      //     style: TextStyle(color: gbl.primaryLight),
-      //   ),
-      //   actions: [
-      //     MaterialButton(
-      //       onPressed: () {},
-      //       shape:
-      //           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      //       splashColor: gbl.primaryLight,
-      //       child: Icon(
-      //         Icons.share,
-      //         color: gbl.primaryLight,
-      //       ),
-      //     )
-      //   ],
-      // ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/brown_gradient.jpeg'),
               fit: BoxFit.cover),
         ),
-        child: Stack(
-          children: [
-            FutureBuilder(
-              future: _currentCashflow,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return wfinance!.scrollAppBarClinch(
-                      _scrollControllerOffset, snapshot.data!);
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: gbl.primaryLight,
-                    ),
-                  );
-                }
-              },
-            ),
-            CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 1.5,
-                    child: Icon(
-                      Icons.rocket,
-                      color: gbl.primaryLight,
-                    ),
+        child: FutureBuilder(
+          future: _currentCashflow,
+          builder: (context, cashflow) {
+            if (cashflow.hasData) {
+              _transactions = _daoTransactions!
+                  .getTransactionsCollection(cashflow.data!.getId());
+              return Stack(
+                children: [
+                  wfinance!.scrollAppBarCashflow(
+                      _scrollControllerOffset, cashflow.data!),
+                  CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 1.5,
+                          child: StreamBuilder(
+                            stream: _transactions!.asStream(),
+                            builder: (context, transactions) {
+                              if (transactions.hasData) {
+                                return wfinance!.listTransactionsCashflow(
+                                    transactions.data!);
+                              } else {
+                                return SizedBox();
+                              }
+                            },
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ],
+                ],
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: gbl.primaryLight,
+                ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -109,45 +98,11 @@ class _PageFinancesState extends State<PageFinances> {
 
   _updatePage() async {
     _currentCashflow = _daoCashflow!.getCurrentCashflow();
-    // _transactions = _daoTransactions!
-    //     .getTransactionsCollection(_currentCashflow!.getId());
   }
 
   _scrollListener() {
     setState(() {
       _scrollControllerOffset = _scrollController.offset;
     });
-  }
-
-  Widget dayBalance(List<Map<String, dynamic>> balanceMap) {
-    return ListView.builder(
-      shrinkWrap:
-          true, // made the list work, but it seans not to be the best practice, instead perhaps I should use SliverList
-      itemCount: balanceMap.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Dia ${balanceMap[index]['current_day']}',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
-                ),
-                Text(
-                  'R\$ ${balanceMap[index]['current_balance']}',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 10, letterSpacing: 3),
-                ),
-              ],
-            ),
-            Divider(
-              color: gbl.primaryLight,
-            ),
-          ],
-        );
-      },
-    );
   }
 }

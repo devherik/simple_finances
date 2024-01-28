@@ -33,7 +33,7 @@ class DaoCashflow {
     });
   }
 
-  Future<void> updateCashflow(String id, double value) async {
+  Future<void> updateCashflow(String id, int value) async {
     // when a transction be done, it will send a value already calculated that will be used to update de cashflow
     await _dataBase.updateDocument('database/finance/cashflow', id,
         <String, dynamic>{'open_value': value}).onError((error, stackTrace) {
