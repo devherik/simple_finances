@@ -18,7 +18,7 @@ class _PageFinancesState extends State<PageFinances> {
   DaoCashflow? _daoCashflow;
   DaoTransactions? _daoTransactions;
   EntityCashflow? _currentCashflow;
-  final wfinance = WidgetFinances();
+  WidgetFinances? wfinance;
   String appBarTitle = 'Caixa';
   late ScrollController _scrollController;
   double _scrollControllerOffset = 0.0;
@@ -32,6 +32,7 @@ class _PageFinancesState extends State<PageFinances> {
   void initState() {
     _daoCashflow = DaoCashflow();
     _daoTransactions = DaoTransactions(context: context);
+    wfinance = WidgetFinances(context: context);
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _updatePage();
@@ -63,31 +64,24 @@ class _PageFinancesState extends State<PageFinances> {
       //     )
       //   ],
       // ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 36),
-        child: Stack(
-          children: [
-            PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width, 20),
-                child: scrollAppBarClinch(_scrollControllerOffset)),
-            CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 1.5,
-                    child: Icon(
-                      Icons.rocket,
-                      color: gbl.primaryLight,
-                    ),
+      body: Stack(
+        children: [
+          wfinance!.scrollAppBarClinch(_scrollControllerOffset),
+          CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 1.5,
+                  child: Icon(
+                    Icons.rocket,
+                    color: gbl.primaryLight,
                   ),
-                )
-              ],
-            ),
-          ],
-        ),
+                ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -102,17 +96,6 @@ class _PageFinancesState extends State<PageFinances> {
     setState(() {
       _scrollControllerOffset = _scrollController.offset;
     });
-  }
-
-  Widget scrollAppBarClinch(double size) {
-    return SafeArea(
-        top: false,
-        child: Container(
-          height: 200,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
-          color: Colors.white.withOpacity((size / 350).clamp(0, 1).toDouble()),
-          child: SafeArea(child: Container()),
-        ));
   }
 
   Widget dayBalance(List<Map<String, dynamic>> balanceMap) {
