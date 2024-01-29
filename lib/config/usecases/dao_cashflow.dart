@@ -55,9 +55,14 @@ class DaoCashflow {
             id: cashflow.id,
             init: cashflow['init'],
             openValue: double.parse(cashflow['open_value'].toString()),
+            closeValue: double.parse(cashflow['close_value'].toString()),
             isOpen: cashflow['is_open'])
         : entity = EntityCashflow(
-            id: '', init: Timestamp.now(), openValue: 0, isOpen: true);
+            id: '',
+            init: Timestamp.now(),
+            openValue: 0.0,
+            closeValue: 0.0,
+            isOpen: true);
     return entity;
   }
 
@@ -71,6 +76,7 @@ class DaoCashflow {
           id: cashflow.id,
           init: cashflow['init'],
           openValue: cashflow['open_value'],
+          closeValue: cashflow['close_value'],
           isOpen: cashflow['is_open'],
         );
       } else {
@@ -78,6 +84,7 @@ class DaoCashflow {
           id: cashflow.id,
           init: cashflow['init'],
           openValue: cashflow['open_value'],
+          closeValue: cashflow['close_value'],
           isOpen: cashflow['is_open'],
         );
         entity.setCloseTime(cashflow['end']);
@@ -88,7 +95,8 @@ class DaoCashflow {
       return EntityCashflow(
         id: '',
         init: Timestamp.now(),
-        openValue: 0,
+        openValue: 0.0,
+        closeValue: 0.0,
         isOpen: true,
       );
     }
@@ -106,6 +114,7 @@ class DaoCashflow {
           id: doc.id,
           init: doc['init'],
           openValue: doc['open_value'],
+          closeValue: doc['close_value'],
           isOpen: doc['is_open'],
         );
         entity.setCloseTime(doc['end']);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_finances/features/home/finance/page_finances.dart';
-import 'package:simple_finances/features/home/page_goals.dart';
+import 'package:simple_finances/features/home/goal/page_goals.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 import 'package:simple_finances/features/transaction/page_transactions.dart';
@@ -17,6 +17,7 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: gbl.primaryDark,
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

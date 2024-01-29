@@ -8,6 +8,9 @@ class WidgetFinances {
 
   WidgetFinances({required BuildContext context}) : _context = context;
 
+  String currentDay =
+      '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
+
   Widget scrollAppBarCashflow(double scrollPosition, EntityCashflow cashflow) {
     // to create an adaptive appbar, this widget uses the scroll position to
     // resize the container and realocate the widgets inside of it
@@ -63,7 +66,12 @@ class WidgetFinances {
                                 letterSpacing: 3),
                           ),
                           MaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: _context,
+                                  builder: (context) =>
+                                      closeCashflowBottomSheet(cashflow));
+                            },
                             padding: const EdgeInsets.all(0),
                             color: gbl.primaryLight,
                             shape: RoundedRectangleBorder(
@@ -81,7 +89,7 @@ class WidgetFinances {
                       ),
                       Center(
                         child: Text(
-                          'R\$ ${cashflow.getOpenValue().toString()}',
+                          'R\$ ${cashflow.getCloseValue()}',
                           style: TextStyle(
                               color: gbl.primaryLight,
                               fontSize: 14,
@@ -113,7 +121,7 @@ class WidgetFinances {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'R\$ ${cashflow.getOpenValue().toString()}',
+                        'R\$ ${cashflow.getCloseValue()}',
                         style: TextStyle(
                             color: gbl.primaryLight,
                             fontSize: 20,
@@ -227,6 +235,114 @@ class WidgetFinances {
           );
         }
       },
+    );
+  }
+
+  Widget closeCashflowBottomSheet(EntityCashflow cashflow) {
+    return Container(
+      decoration: BoxDecoration(
+          color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+      height: 400,
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: 25,
+              child: Divider(color: gbl.primaryLight),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  Icons.business_center,
+                  color: gbl.primaryLight,
+                ),
+                Text(
+                  'Fechamento de caixa',
+                  style: TextStyle(
+                      color: gbl.primaryLight,
+                      fontSize: 20,
+                      letterSpacing: 3,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+          Divider(
+            color: gbl.primaryLight,
+            thickness: 3,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.monetization_on_outlined,
+                  color: gbl.primaryLight,
+                  size: 20,
+                ),
+                Text(
+                  ' R\$ ${cashflow.getCloseValue()}',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(_context).size.width * .9,
+            child: Divider(
+              color: gbl.primaryLight,
+              thickness: .5,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.date_range,
+                  color: gbl.primaryLight,
+                  size: 20,
+                ),
+                Text(
+                  ' ${cashflow.getInitTimeToString()} até $currentDay',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 60,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: MaterialButton(
+              onPressed: () {},
+              color: gbl.primaryLight,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              minWidth: MediaQuery.of(_context).size.width * .9,
+              splashColor: gbl.primaryDark,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              child: Text(
+                'Confirmar',
+                style: TextStyle(
+                    color: gbl.primaryDark, letterSpacing: 3, fontSize: 20),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

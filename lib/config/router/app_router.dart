@@ -16,7 +16,7 @@ class AppRouter {
       builder: (context, state) => const PageRecovery(),
     ),
     GoRoute(
-      path: '/navigation',
+      path: '/home',
       builder: (context, state) => const PageNavigationBar(),
     ),
     GoRoute(

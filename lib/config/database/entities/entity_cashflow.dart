@@ -12,11 +12,13 @@ class EntityCashflow {
       {required String id,
       required Timestamp init,
       required double openValue,
+      required double closeValue,
       required bool isOpen})
       : _id = id,
         _openValue = openValue,
         _init = init,
-        _isOpen = isOpen;
+        _isOpen = isOpen,
+        _closeValue = closeValue;
 
   String getId() => _id!;
   double getOpenValue() => _openValue!;

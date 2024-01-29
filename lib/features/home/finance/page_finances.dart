@@ -22,11 +22,7 @@ class _PageFinancesState extends State<PageFinances> {
   String appBarTitle = 'Caixa';
   late ScrollController _scrollController;
   double _scrollControllerOffset = 0.0;
-
   Future<List<EntityTransaction>>? _transactions;
-  String currentMonth = '';
-  int yearIndex = DateTime.now().year;
-  int monthIndex = DateTime.now().month;
 
   @override
   void initState() {
@@ -58,7 +54,6 @@ class _PageFinancesState extends State<PageFinances> {
                   .getTransactionsCollection(cashflow.data!.getId());
               return SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     wfinance!.scrollAppBarCashflow(
                         _scrollControllerOffset, cashflow.data!),
