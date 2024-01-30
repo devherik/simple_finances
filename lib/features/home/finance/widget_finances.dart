@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
 import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
@@ -39,7 +40,10 @@ class WidgetFinances {
                             letterSpacing: 3),
                       ),
                       MaterialButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Share.share(cashflow.toString(),
+                              subject: 'Cashflow Resume');
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         splashColor: gbl.primaryDark,
@@ -154,7 +158,12 @@ class WidgetFinances {
       itemBuilder: (context, index) {
         if (transactions[index].getType() == 'order') {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                  context: _context,
+                  builder: (context) =>
+                      transactionBottomSheet(transactions[index]));
+            },
             child: Card(
               color: Colors.transparent.withOpacity(0.1),
               child: Container(
@@ -178,8 +187,19 @@ class WidgetFinances {
                     ),
                     Text(
                       'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
-                      style: TextStyle(color: gbl.primaryLight, fontSize: 22),
+                      style: TextStyle(color: gbl.primaryLight, fontSize: 18),
                     ),
+                    transactions[index].getPaymentState()
+                        ? const Icon(
+                            Icons.check,
+                            color: gbl.baseGreen,
+                            size: 20,
+                          )
+                        : const Icon(
+                            Icons.close,
+                            color: gbl.baseRed,
+                            size: 20,
+                          )
                   ],
                 ),
               ),
@@ -226,8 +246,19 @@ class WidgetFinances {
                           ),
                     Text(
                       'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
-                      style: TextStyle(color: gbl.primaryLight, fontSize: 22),
+                      style: TextStyle(color: gbl.primaryLight, fontSize: 18),
                     ),
+                    transactions[index].getPaymentState()
+                        ? const Icon(
+                            Icons.check,
+                            color: gbl.baseGreen,
+                            size: 20,
+                          )
+                        : const Icon(
+                            Icons.close,
+                            color: gbl.baseRed,
+                            size: 20,
+                          )
                   ],
                 ),
               ),
@@ -235,6 +266,125 @@ class WidgetFinances {
           );
         }
       },
+    );
+  }
+
+  Widget transactionBottomSheet(EntityTransaction transaction) {
+    return Container(
+      decoration: BoxDecoration(
+          color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+      height: 400,
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: 35,
+              child: Divider(color: gbl.secondaryDark),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  ' R\$ ${transaction.getValue()}',
+                  style: TextStyle(
+                    color: gbl.primaryLight,
+                    fontSize: 20,
+                    letterSpacing: 3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: gbl.primaryLight,
+            thickness: 2,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.date_range,
+                  color: gbl.primaryLight,
+                  size: 20,
+                ),
+                Text(
+                  ' ${transaction.getInitTimeToString()}',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(_context).size.width * .9,
+            child: Divider(
+              color: gbl.primaryLight,
+              thickness: .5,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.person,
+                  color: gbl.primaryLight,
+                  size: 20,
+                ),
+                Text(
+                  ' Cliente',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(_context).size.width * .9,
+            child: Divider(
+              color: gbl.primaryLight,
+              thickness: .5,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.shopping_bag,
+                  color: gbl.primaryLight,
+                  size: 20,
+                ),
+                Text(
+                  ' Produtos',
+                  style: TextStyle(
+                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            // child: ListView(),
+          ),
+          SizedBox(
+            width: MediaQuery.of(_context).size.width * .9,
+            child: Divider(
+              color: gbl.primaryLight,
+              thickness: .5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -249,8 +399,8 @@ class WidgetFinances {
           Align(
             alignment: Alignment.topCenter,
             child: SizedBox(
-              width: 25,
-              child: Divider(color: gbl.primaryLight),
+              width: 35,
+              child: Divider(color: gbl.secondaryDark),
             ),
           ),
           Padding(
@@ -265,17 +415,17 @@ class WidgetFinances {
                 Text(
                   'Fechamento de caixa',
                   style: TextStyle(
-                      color: gbl.primaryLight,
-                      fontSize: 20,
-                      letterSpacing: 3,
-                      fontWeight: FontWeight.bold),
+                    color: gbl.primaryLight,
+                    fontSize: 20,
+                    letterSpacing: 3,
+                  ),
                 )
               ],
             ),
           ),
           Divider(
             color: gbl.primaryLight,
-            thickness: 3,
+            thickness: 2,
           ),
           Padding(
             padding: const EdgeInsets.all(8),

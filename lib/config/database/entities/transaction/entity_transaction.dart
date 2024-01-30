@@ -7,20 +7,23 @@ class EntityTransaction {
   double? _value;
   Timestamp? _timestamp;
   String? _cashflowId;
+  bool? _isPayd;
 
-  EntityTransaction(
-      {required String id,
-      required String type,
-      required String description,
-      required double value,
-      required Timestamp time,
-      required String cashflowId})
-      : _id = id,
+  EntityTransaction({
+    required String id,
+    required String type,
+    required String description,
+    required double value,
+    required Timestamp time,
+    required String cashflowId,
+    required bool isPayd,
+  })  : _id = id,
         _type = type,
         _description = description,
         _value = value,
         _timestamp = time,
-        _cashflowId = cashflowId;
+        _cashflowId = cashflowId,
+        _isPayd = isPayd;
 
   @override
   String toString() {
@@ -43,6 +46,7 @@ class EntityTransaction {
   setDescription(String value) => _description = value;
   setTimestamp(value) => _timestamp = value;
   setFinanceId(value) => _cashflowId = value;
+  bool getPaymentState() => _isPayd!;
 
   updateTransaction(
       String type, double value, Timestamp time, String financeId) {

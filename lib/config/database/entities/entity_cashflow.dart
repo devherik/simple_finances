@@ -20,6 +20,11 @@ class EntityCashflow {
         _isOpen = isOpen,
         _closeValue = closeValue;
 
+  @override
+  String toString() {
+    return 'Caixa aberto no dia $getInitTimeToString(), com saldo de R\$ $getCloseValue()';
+  }
+
   String getId() => _id!;
   double getOpenValue() => _openValue!;
   double getCloseValue() => _closeValue!;

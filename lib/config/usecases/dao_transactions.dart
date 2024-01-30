@@ -29,7 +29,8 @@ class DaoTransactions {
               'description': transaction.getDescription(),
               'timestamp': transaction.getTimestamp(),
               'type': transaction.getType(),
-              'value': transaction.getValue()
+              'value': transaction.getValue(),
+              'is_paid': transaction.getPaymentState()
             })
         .whenComplete(
             () async => await _daoCashflow.updateCashflow(cashflowId, newValue))
@@ -70,7 +71,8 @@ class DaoTransactions {
                   value: double.parse(doc['value'].toString()),
                   description: doc['description'],
                   time: doc['timestamp'],
-                  cashflowId: cashflowId));
+                  cashflowId: cashflowId,
+                  isPayd: doc['is_paid']));
         }
       }
     }).onError((error, stackTrace) {

@@ -69,7 +69,15 @@ class _PageFinancesState extends State<PageFinances> {
                               return wfinance!
                                   .listTransactionsCashflow(transactions.data!);
                             } else {
-                              return SizedBox();
+                              return Center(
+                                child: Text(
+                                  'Sem transações',
+                                  style: TextStyle(
+                                      color: gbl.primaryLight,
+                                      fontSize: 14,
+                                      letterSpacing: 3),
+                                ),
+                              );
                             }
                           },
                         ),
