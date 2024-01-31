@@ -28,7 +28,8 @@ class _PageFinancesState extends State<PageFinances> {
   void initState() {
     _daoCashflow = DaoCashflow();
     _daoTransactions = DaoTransactions(context: context);
-    wfinance = WidgetFinances(context: context);
+    wfinance = WidgetFinances(
+        context: context, scrollPosition: _scrollControllerOffset);
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _updatePage();
@@ -55,8 +56,7 @@ class _PageFinancesState extends State<PageFinances> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    wfinance!.scrollAppBarCashflow(
-                        _scrollControllerOffset, cashflow.data!),
+                    wfinance!.scrollAppBarCashflow(cashflow.data!),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: 10),
@@ -101,6 +101,7 @@ class _PageFinancesState extends State<PageFinances> {
 
   _updatePage() async {
     _currentCashflow = _daoCashflow!.getCurrentCashflow();
+    setState(() {});
   }
 
   _scrollListener() {

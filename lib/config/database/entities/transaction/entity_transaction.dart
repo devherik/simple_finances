@@ -47,6 +47,7 @@ class EntityTransaction {
   setTimestamp(value) => _timestamp = value;
   setFinanceId(value) => _cashflowId = value;
   bool getPaymentState() => _isPayd!;
+  setPaymenteState(bool value) => _isPayd = value;
 
   updateTransaction(
       String type, double value, Timestamp time, String financeId) {

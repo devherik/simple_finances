@@ -6,16 +6,20 @@ import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
 class WidgetFinances {
   final BuildContext _context;
+  double _scrollPosition;
 
-  WidgetFinances({required BuildContext context}) : _context = context;
+  WidgetFinances(
+      {required BuildContext context, required double scrollPosition})
+      : _context = context,
+        _scrollPosition = scrollPosition;
 
   String currentDay =
       '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
 
-  Widget scrollAppBarCashflow(double scrollPosition, EntityCashflow cashflow) {
+  Widget scrollAppBarCashflow(EntityCashflow cashflow) {
     // to create an adaptive appbar, this widget uses the scroll position to
     // resize the container and realocate the widgets inside of it
-    double size = scrollPosition <= 100 ? 200 - scrollPosition : 100;
+    double size = _scrollPosition <= 100 ? 200 - _scrollPosition : 100;
     if (size >= 150.0) {
       return SafeArea(
         top: false,
@@ -207,7 +211,12 @@ class WidgetFinances {
           );
         } else {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                  context: _context,
+                  builder: (context) =>
+                      transactionBottomSheet(transactions[index]));
+            },
             child: Card(
               color: Colors.transparent.withOpacity(0.1),
               child: Container(
@@ -270,122 +279,223 @@ class WidgetFinances {
   }
 
   Widget transactionBottomSheet(EntityTransaction transaction) {
-    return Container(
-      decoration: BoxDecoration(
-          color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
-      height: 400,
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: 35,
-              child: Divider(color: gbl.secondaryDark),
+    if (transaction.getType() == 'order') {
+      return Container(
+        decoration: BoxDecoration(
+            color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+        height: 400,
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: 35,
+                child: Divider(color: gbl.secondaryDark),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  ' R\$ ${transaction.getValue()}',
-                  style: TextStyle(
-                    color: gbl.primaryLight,
-                    fontSize: 20,
-                    letterSpacing: 3,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    ' R\$ ${transaction.getValue()}',
+                    style: TextStyle(
+                      color: gbl.primaryLight,
+                      fontSize: 20,
+                      letterSpacing: 3,
+                    ),
                   ),
-                ),
-              ],
+                  MaterialButton(
+                    color: gbl.primaryDark,
+                    splashColor: gbl.primaryLight,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: transaction.getPaymentState()
+                        ? const Icon(
+                            Icons.toggle_on,
+                            color: gbl.baseGreen,
+                          )
+                        : const Icon(
+                            Icons.toggle_off,
+                            color: gbl.baseRed,
+                          ),
+                    onPressed: () {
+                      transaction
+                          .setPaymenteState(!transaction.getPaymentState());
+                    },
+                  )
+                ],
+              ),
             ),
-          ),
-          Divider(
-            color: gbl.primaryLight,
-            thickness: 2,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.date_range,
-                  color: gbl.primaryLight,
-                  size: 20,
-                ),
-                Text(
-                  ' ${transaction.getInitTimeToString()}',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(_context).size.width * .9,
-            child: Divider(
+            Divider(
               color: gbl.primaryLight,
-              thickness: .5,
+              thickness: 2,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.person,
-                  color: gbl.primaryLight,
-                  size: 20,
-                ),
-                Text(
-                  ' Cliente',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.date_range,
+                    color: gbl.primaryLight,
+                    size: 20,
+                  ),
+                  Text(
+                    ' ${transaction.getInitTimeToString()}',
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 16,
+                        letterSpacing: 3),
+                  )
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(_context).size.width * .9,
-            child: Divider(
+            SizedBox(
+              width: MediaQuery.of(_context).size.width * .9,
+              child: Divider(
+                color: gbl.primaryLight,
+                thickness: .5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: gbl.primaryLight,
+                    size: 20,
+                  ),
+                  Text(
+                    ' Cliente',
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 16,
+                        letterSpacing: 3),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(_context).size.width * .9,
+              child: Divider(
+                color: gbl.primaryLight,
+                thickness: .5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.shopping_bag,
+                    color: gbl.primaryLight,
+                    size: 20,
+                  ),
+                  Text(
+                    ' Produtos',
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 16,
+                        letterSpacing: 3),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              // child: ListView(),
+            ),
+            SizedBox(
+              width: MediaQuery.of(_context).size.width * .9,
+              child: Divider(
+                color: gbl.primaryLight,
+                thickness: .5,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+          decoration: BoxDecoration(
+              color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+          height: 400,
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+          child: Column(children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: 35,
+                child: Divider(color: gbl.secondaryDark),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    ' R\$ ${transaction.getValue()}',
+                    style: TextStyle(
+                      color: gbl.primaryLight,
+                      fontSize: 20,
+                      letterSpacing: 3,
+                    ),
+                  ),
+                  MaterialButton(
+                    color: gbl.primaryDark,
+                    splashColor: gbl.primaryLight,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: transaction.getPaymentState()
+                        ? const Icon(
+                            Icons.toggle_on,
+                            color: gbl.baseGreen,
+                          )
+                        : const Icon(
+                            Icons.toggle_off,
+                            color: gbl.baseRed,
+                          ),
+                    onPressed: () {
+                      transaction
+                          .setPaymenteState(!transaction.getPaymentState());
+                    },
+                  )
+                ],
+              ),
+            ),
+            Divider(
               color: gbl.primaryLight,
-              thickness: .5,
+              thickness: 2,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.shopping_bag,
-                  color: gbl.primaryLight,
-                  size: 20,
-                ),
-                Text(
-                  ' Produtos',
-                  style: TextStyle(
-                      color: gbl.primaryLight, fontSize: 16, letterSpacing: 3),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            // child: ListView(),
-          ),
-          SizedBox(
-            width: MediaQuery.of(_context).size.width * .9,
-            child: Divider(
-              color: gbl.primaryLight,
-              thickness: .5,
-            ),
-          ),
-        ],
-      ),
-    );
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.date_range,
+                    color: gbl.primaryLight,
+                    size: 20,
+                  ),
+                  Text(
+                    ' ${transaction.getInitTimeToString()}',
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 16,
+                        letterSpacing: 3),
+                  )
+                ],
+              ),
+            )
+          ]));
+    }
   }
 
   Widget closeCashflowBottomSheet(EntityCashflow cashflow) {
