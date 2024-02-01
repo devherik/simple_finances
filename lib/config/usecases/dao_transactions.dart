@@ -45,6 +45,10 @@ class DaoTransactions {
   Future<void> updateTransaction(
       String cashflowId, EntityTransaction transaction) async {
     // update using the id of the transaction
+    _dataBase.updateDocument(
+        'database/finance/cashflow/$cashflowId/transactions',
+        transaction.getId(),
+        transaction.toMap());
   }
 
   Future<List<EntityTransaction>> getTransactionsCollection(

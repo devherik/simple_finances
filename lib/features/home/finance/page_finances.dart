@@ -29,10 +29,13 @@ class _PageFinancesState extends State<PageFinances> {
     _daoCashflow = DaoCashflow();
     _daoTransactions = DaoTransactions(context: context);
     wfinance = WidgetFinances(
-        context: context, scrollPosition: _scrollControllerOffset);
+        context: context,
+        scrollPosition: _scrollControllerOffset,
+        daoTransactions: _daoTransactions,
+        update: updatePage);
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    _updatePage();
+    updatePage();
     super.initState();
   }
 
@@ -66,8 +69,8 @@ class _PageFinancesState extends State<PageFinances> {
                           stream: _transactions!.asStream(),
                           builder: (context, transactions) {
                             if (transactions.hasData) {
-                              return wfinance!
-                                  .listTransactionsCashflow(transactions.data!);
+                              return wfinance!.listTransactionsCashflow(
+                                  cashflow.data!, transactions.data!);
                             } else {
                               return Center(
                                 child: Text(
@@ -99,7 +102,7 @@ class _PageFinancesState extends State<PageFinances> {
     );
   }
 
-  _updatePage() async {
+  updatePage() {
     _currentCashflow = _daoCashflow!.getCurrentCashflow();
     setState(() {});
   }

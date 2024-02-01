@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
 import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
+import 'package:simple_finances/config/usecases/dao_transactions.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
 class WidgetFinances {
   final BuildContext _context;
   double _scrollPosition;
+  final DaoTransactions? _daoTransactions;
+  final VoidCallback _update;
 
   WidgetFinances(
-      {required BuildContext context, required double scrollPosition})
+      {required BuildContext context,
+      required double scrollPosition,
+      required DaoTransactions? daoTransactions,
+      required VoidCallback update})
       : _context = context,
-        _scrollPosition = scrollPosition;
+        _scrollPosition = scrollPosition,
+        _daoTransactions = daoTransactions,
+        _update = update;
 
   String currentDay =
       '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
@@ -156,7 +165,8 @@ class WidgetFinances {
     }
   }
 
-  Widget listTransactionsCashflow(List<EntityTransaction> transactions) {
+  Widget listTransactionsCashflow(
+      EntityCashflow cashflow, List<EntityTransaction> transactions) {
     return ListView.builder(
       itemCount: transactions.length,
       itemBuilder: (context, index) {
@@ -166,7 +176,7 @@ class WidgetFinances {
               showModalBottomSheet(
                   context: _context,
                   builder: (context) =>
-                      transactionBottomSheet(transactions[index]));
+                      transactionBottomSheet(cashflow, transactions[index]));
             },
             child: Card(
               color: Colors.transparent.withOpacity(0.1),
@@ -215,7 +225,7 @@ class WidgetFinances {
               showModalBottomSheet(
                   context: _context,
                   builder: (context) =>
-                      transactionBottomSheet(transactions[index]));
+                      transactionBottomSheet(cashflow, transactions[index]));
             },
             child: Card(
               color: Colors.transparent.withOpacity(0.1),
@@ -278,7 +288,8 @@ class WidgetFinances {
     );
   }
 
-  Widget transactionBottomSheet(EntityTransaction transaction) {
+  Widget transactionBottomSheet(
+      EntityCashflow cashflow, EntityTransaction transaction) {
     if (transaction.getType() == 'order') {
       return Container(
         decoration: BoxDecoration(
@@ -324,6 +335,11 @@ class WidgetFinances {
                     onPressed: () {
                       transaction
                           .setPaymenteState(!transaction.getPaymentState());
+                      _daoTransactions!
+                          .updateTransaction(cashflow.getId(), transaction)
+                          .whenComplete(() {
+                        _update();
+                      });
                     },
                   )
                 ],
@@ -465,6 +481,12 @@ class WidgetFinances {
                     onPressed: () {
                       transaction
                           .setPaymenteState(!transaction.getPaymentState());
+                      _daoTransactions!
+                          .updateTransaction(cashflow.getId(), transaction)
+                          .whenComplete(() {
+                        _update();
+                        _context.pop();
+                      });
                     },
                   )
                 ],

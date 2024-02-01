@@ -15,4 +15,10 @@ class EntityOrder extends EntityTransaction {
 
   String getCustomerId() => _customerId!;
   setCustomerId(String value) => _customerId = value;
+
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    return super.toMap();
+  }
 }

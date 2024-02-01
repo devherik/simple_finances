@@ -55,4 +55,14 @@ class EntityTransaction {
     _value = value;
     _cashflowId = financeId;
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'description': _description,
+      'value': _value,
+      'is_paid': _isPayd,
+      'timestamp': _timestamp,
+      "type": _type
+    };
+  }
 }
