@@ -171,115 +171,149 @@ class WidgetFinances {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         if (transactions[index].getType() == 'order') {
-          return GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                  context: _context,
-                  builder: (context) =>
-                      transactionBottomSheet(cashflow, transactions[index]));
-            },
-            child: Card(
-              color: Colors.transparent.withOpacity(0.1),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.shopping_bag,
-                          color: gbl.baseBlue,
-                        ),
-                        Text(
-                          'pedido',
-                          style: TextStyle(color: gbl.baseBlue, fontSize: 10),
-                        ),
-                      ],
-                    ),
-                    Text(
+          return Card(
+            color: Colors.transparent.withOpacity(0.1),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.shopping_bag,
+                        color: gbl.baseBlue,
+                      ),
+                      Text(
+                        'pedido',
+                        style: TextStyle(color: gbl.baseBlue, fontSize: 10),
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: _context,
+                          builder: (context) => transactionBottomSheet(
+                              cashflow, transactions[index]));
+                    },
+                    child: Text(
                       'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
                       style: TextStyle(color: gbl.primaryLight, fontSize: 18),
                     ),
-                    transactions[index].getPaymentState()
+                  ),
+                  MaterialButton(
+                    minWidth: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    splashColor: transactions[index].getPaymentState()
+                        ? gbl.baseRed
+                        : gbl.baseGreen,
+                    child: transactions[index].getPaymentState()
                         ? const Icon(
-                            Icons.check,
+                            Icons.toggle_on_outlined,
                             color: gbl.baseGreen,
                             size: 20,
                           )
                         : const Icon(
-                            Icons.close,
+                            Icons.toggle_off_outlined,
                             color: gbl.baseRed,
                             size: 20,
-                          )
-                  ],
-                ),
+                          ),
+                    onPressed: () {
+                      transactions[index].setPaymenteState(
+                          !transactions[index].getPaymentState());
+                      _daoTransactions!
+                          .updateTransaction(
+                              cashflow.getId(), transactions[index])
+                          .whenComplete(() {
+                        _update();
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
           );
         } else {
-          return GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                  context: _context,
-                  builder: (context) =>
-                      transactionBottomSheet(cashflow, transactions[index]));
-            },
-            child: Card(
-              color: Colors.transparent.withOpacity(0.1),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    transactions[index].getType() == 'income'
-                        ? const Row(
-                            children: [
-                              Icon(
-                                Icons.arrow_downward,
-                                color: gbl.baseGreen,
-                              ),
-                              Text(
-                                'entrada',
-                                style: TextStyle(
-                                    color: gbl.baseGreen, fontSize: 10),
-                              ),
-                            ],
-                          )
-                        : const Row(
-                            children: [
-                              Icon(
-                                Icons.arrow_upward,
-                                color: gbl.baseRed,
-                              ),
-                              Text(
-                                'saída',
-                                style:
-                                    TextStyle(color: gbl.baseRed, fontSize: 10),
-                              ),
-                            ],
-                          ),
-                    Text(
+          return Card(
+            color: Colors.transparent.withOpacity(0.1),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  transactions[index].getType() == 'income'
+                      ? const Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_downward,
+                              color: gbl.baseGreen,
+                            ),
+                            Text(
+                              'entrada',
+                              style:
+                                  TextStyle(color: gbl.baseGreen, fontSize: 10),
+                            ),
+                          ],
+                        )
+                      : const Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_upward,
+                              color: gbl.baseRed,
+                            ),
+                            Text(
+                              'saída',
+                              style:
+                                  TextStyle(color: gbl.baseRed, fontSize: 10),
+                            ),
+                          ],
+                        ),
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: _context,
+                          builder: (context) => transactionBottomSheet(
+                              cashflow, transactions[index]));
+                    },
+                    child: Text(
                       'R\$ ${transactions[index].getValue().toString()} - ${transactions[index].getInitTimeToString()}',
                       style: TextStyle(color: gbl.primaryLight, fontSize: 18),
                     ),
-                    transactions[index].getPaymentState()
+                  ),
+                  MaterialButton(
+                    minWidth: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    splashColor: transactions[index].getPaymentState()
+                        ? gbl.baseRed
+                        : gbl.baseGreen,
+                    child: transactions[index].getPaymentState()
                         ? const Icon(
-                            Icons.check,
+                            Icons.toggle_on_outlined,
                             color: gbl.baseGreen,
                             size: 20,
                           )
                         : const Icon(
-                            Icons.close,
+                            Icons.toggle_off_outlined,
                             color: gbl.baseRed,
                             size: 20,
-                          )
-                  ],
-                ),
+                          ),
+                    onPressed: () {
+                      transactions[index].setPaymenteState(
+                          !transactions[index].getPaymentState());
+                      _daoTransactions!
+                          .updateTransaction(
+                              cashflow.getId(), transactions[index])
+                          .whenComplete(() {
+                        _update();
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
           );
@@ -293,7 +327,11 @@ class WidgetFinances {
     if (transaction.getType() == 'order') {
       return Container(
         decoration: BoxDecoration(
-            color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+          image: const DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(10),
+        ),
         height: 400,
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
         child: Column(
@@ -318,30 +356,33 @@ class WidgetFinances {
                       letterSpacing: 3,
                     ),
                   ),
-                  MaterialButton(
-                    color: gbl.primaryDark,
-                    splashColor: gbl.primaryLight,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: transaction.getPaymentState()
-                        ? const Icon(
-                            Icons.toggle_on,
-                            color: gbl.baseGreen,
-                          )
-                        : const Icon(
-                            Icons.toggle_off,
-                            color: gbl.baseRed,
-                          ),
-                    onPressed: () {
-                      transaction
-                          .setPaymenteState(!transaction.getPaymentState());
-                      _daoTransactions!
-                          .updateTransaction(cashflow.getId(), transaction)
-                          .whenComplete(() {
-                        _update();
-                      });
-                    },
-                  )
+                  transaction.getPaymentState()
+                      ? const Row(
+                          children: [
+                            Text(
+                              'Confirmado',
+                              style:
+                                  TextStyle(fontSize: 10, color: gbl.baseGreen),
+                            ),
+                            Icon(
+                              Icons.check,
+                              color: gbl.baseGreen,
+                            ),
+                          ],
+                        )
+                      : const Row(
+                          children: [
+                            Text(
+                              'Pendente',
+                              style:
+                                  TextStyle(fontSize: 10, color: gbl.baseRed),
+                            ),
+                            Icon(
+                              Icons.close,
+                              color: gbl.baseRed,
+                            ),
+                          ],
+                        )
                 ],
               ),
             ),
@@ -434,16 +475,95 @@ class WidgetFinances {
                 thickness: .5,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: MediaQuery.of(_context).size.width * .8,
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  splashColor: gbl.baseRed,
+                  onPressed: () async {
+                    return showDialog(
+                      context: _context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Center(
+                            child: Text(
+                              'Apagar transação?',
+                              style: TextStyle(color: gbl.primaryLight),
+                            ),
+                          ),
+                          backgroundColor: gbl.primaryDark,
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  splashColor: gbl.primaryLight,
+                                  onPressed: () {
+                                    _context.pop();
+                                  },
+                                  child: Text(
+                                    'Sim',
+                                    style: TextStyle(color: gbl.primaryLight),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  splashColor: gbl.primaryLight,
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Text(
+                                    'Não',
+                                    style: TextStyle(color: gbl.primaryLight),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.delete_outline,
+                        color: gbl.baseRed,
+                        size: 20,
+                      ),
+                      Text(
+                        'Apagar transação',
+                        style: TextStyle(
+                            color: gbl.baseRed, fontSize: 16, letterSpacing: 3),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       );
     } else {
       return Container(
-          decoration: BoxDecoration(
-              color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
-          height: 400,
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-          child: Column(children: [
+        decoration: BoxDecoration(
+          image: const DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        height: 300,
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+        child: Column(
+          children: [
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
@@ -464,31 +584,33 @@ class WidgetFinances {
                       letterSpacing: 3,
                     ),
                   ),
-                  MaterialButton(
-                    color: gbl.primaryDark,
-                    splashColor: gbl.primaryLight,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: transaction.getPaymentState()
-                        ? const Icon(
-                            Icons.toggle_on,
-                            color: gbl.baseGreen,
-                          )
-                        : const Icon(
-                            Icons.toggle_off,
-                            color: gbl.baseRed,
-                          ),
-                    onPressed: () {
-                      transaction
-                          .setPaymenteState(!transaction.getPaymentState());
-                      _daoTransactions!
-                          .updateTransaction(cashflow.getId(), transaction)
-                          .whenComplete(() {
-                        _update();
-                        _context.pop();
-                      });
-                    },
-                  )
+                  transaction.getPaymentState()
+                      ? const Row(
+                          children: [
+                            Text(
+                              'Confirmado',
+                              style:
+                                  TextStyle(fontSize: 10, color: gbl.baseGreen),
+                            ),
+                            Icon(
+                              Icons.check,
+                              color: gbl.baseGreen,
+                            ),
+                          ],
+                        )
+                      : const Row(
+                          children: [
+                            Text(
+                              'Pendente',
+                              style:
+                                  TextStyle(fontSize: 10, color: gbl.baseRed),
+                            ),
+                            Icon(
+                              Icons.close,
+                              color: gbl.baseRed,
+                            ),
+                          ],
+                        )
                 ],
               ),
             ),
@@ -515,8 +637,118 @@ class WidgetFinances {
                   )
                 ],
               ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(_context).size.width * .9,
+              child: Divider(
+                color: gbl.primaryLight,
+                thickness: .5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.short_text,
+                    color: gbl.primaryLight,
+                    size: 20,
+                  ),
+                  Text(
+                    ' ${transaction.getDescription()}',
+                    style: TextStyle(
+                        color: gbl.primaryLight,
+                        fontSize: 16,
+                        letterSpacing: 3),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(_context).size.width * .9,
+              child: Divider(
+                color: gbl.primaryLight,
+                thickness: .5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: MediaQuery.of(_context).size.width * .8,
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  splashColor: gbl.baseRed,
+                  onPressed: () async {
+                    return showDialog(
+                      context: _context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Center(
+                            child: Text(
+                              'Apagar transação?',
+                              style: TextStyle(color: gbl.primaryLight),
+                            ),
+                          ),
+                          backgroundColor: gbl.primaryDark,
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  splashColor: gbl.primaryLight,
+                                  onPressed: () {
+                                    _context.pop();
+                                  },
+                                  child: Text(
+                                    'Sim',
+                                    style: TextStyle(color: gbl.primaryLight),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  splashColor: gbl.primaryLight,
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Text(
+                                    'Não',
+                                    style: TextStyle(color: gbl.primaryLight),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.delete_outline,
+                        color: gbl.baseRed,
+                        size: 20,
+                      ),
+                      Text(
+                        'Apagar transação',
+                        style: TextStyle(
+                            color: gbl.baseRed, fontSize: 16, letterSpacing: 3),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             )
-          ]));
+          ],
+        ),
+      );
     }
   }
 

@@ -56,15 +56,15 @@ class _PageFinancesState extends State<PageFinances> {
             if (cashflow.hasData) {
               _transactions = _daoTransactions!
                   .getTransactionsCollection(cashflow.data!.getId());
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    wfinance!.scrollAppBarCashflow(cashflow.data!),
-                    Padding(
+              return Column(
+                children: [
+                  wfinance!.scrollAppBarCashflow(cashflow.data!),
+                  SingleChildScrollView(
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: 10),
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height,
+                        height: MediaQuery.of(context).size.height / 2,
                         child: StreamBuilder(
                           stream: _transactions!.asStream(),
                           builder: (context, transactions) {
@@ -86,8 +86,8 @@ class _PageFinancesState extends State<PageFinances> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
             } else {
               return Center(
