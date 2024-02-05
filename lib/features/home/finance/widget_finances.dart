@@ -89,13 +89,13 @@ class WidgetFinances {
                                   builder: (context) =>
                                       closeCashflowBottomSheet(cashflow));
                             },
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.all(2),
                             color: gbl.primaryLight,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)),
                             splashColor: gbl.primaryDark,
                             child: Text(
-                              'Fechar',
+                              'Detalhes',
                               style: TextStyle(
                                   color: gbl.primaryDark,
                                   fontSize: 14,
@@ -488,43 +488,49 @@ class WidgetFinances {
                       context: _context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Center(
-                            child: Text(
-                              'Apagar transação?',
-                              style: TextStyle(color: gbl.primaryLight),
-                            ),
-                          ),
                           backgroundColor: gbl.primaryDark,
-                          content: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  splashColor: gbl.primaryLight,
-                                  onPressed: () {
-                                    _context.pop();
-                                  },
-                                  child: Text(
-                                    'Sim',
-                                    style: TextStyle(color: gbl.primaryLight),
+                          content: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    splashColor: gbl.primaryLight,
+                                    onPressed: () {
+                                      _context.pop();
+                                    },
+                                    child: const Text(
+                                      'Sim',
+                                      style: TextStyle(color: gbl.baseRed),
+                                    ),
                                   ),
-                                ),
-                                MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  splashColor: gbl.primaryLight,
-                                  onPressed: () {
-                                    context.pop();
-                                  },
-                                  child: Text(
-                                    'Não',
-                                    style: TextStyle(color: gbl.primaryLight),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(_context).size.width * .7,
+                                    child: Divider(
+                                      color: gbl.primaryLight,
+                                      thickness: .5,
+                                    ),
                                   ),
-                                )
-                              ],
+                                  MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    splashColor: gbl.primaryLight,
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    child: Text(
+                                      'Não',
+                                      style: TextStyle(color: gbl.primaryLight),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -685,43 +691,49 @@ class WidgetFinances {
                       context: _context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Center(
-                            child: Text(
-                              'Apagar transação?',
-                              style: TextStyle(color: gbl.primaryLight),
-                            ),
-                          ),
                           backgroundColor: gbl.primaryDark,
-                          content: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  splashColor: gbl.primaryLight,
-                                  onPressed: () {
-                                    _context.pop();
-                                  },
-                                  child: Text(
-                                    'Sim',
-                                    style: TextStyle(color: gbl.primaryLight),
+                          content: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    splashColor: gbl.primaryLight,
+                                    onPressed: () {
+                                      _context.pop();
+                                    },
+                                    child: const Text(
+                                      'Sim',
+                                      style: TextStyle(color: gbl.baseRed),
+                                    ),
                                   ),
-                                ),
-                                MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  splashColor: gbl.primaryLight,
-                                  onPressed: () {
-                                    context.pop();
-                                  },
-                                  child: Text(
-                                    'Não',
-                                    style: TextStyle(color: gbl.primaryLight),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(_context).size.width * .7,
+                                    child: Divider(
+                                      color: gbl.primaryLight,
+                                      thickness: .5,
+                                    ),
                                   ),
-                                )
-                              ],
+                                  MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    splashColor: gbl.primaryLight,
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    child: Text(
+                                      'Não',
+                                      style: TextStyle(color: gbl.primaryLight),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -755,7 +767,10 @@ class WidgetFinances {
   Widget closeCashflowBottomSheet(EntityCashflow cashflow) {
     return Container(
       decoration: BoxDecoration(
-          color: gbl.primaryDark, borderRadius: BorderRadius.circular(10)),
+        image: const DecorationImage(
+            image: AssetImage('assets/brown_gradient.jpeg'), fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(10),
+      ),
       height: 400,
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
       child: Column(
@@ -777,7 +792,7 @@ class WidgetFinances {
                   color: gbl.primaryLight,
                 ),
                 Text(
-                  'Fechamento de caixa',
+                  'Detalhes do caixa',
                   style: TextStyle(
                     color: gbl.primaryLight,
                     fontSize: 20,
@@ -834,24 +849,40 @@ class WidgetFinances {
               ],
             ),
           ),
-          const SizedBox(
-            height: 60,
+          SizedBox(
+            width: MediaQuery.of(_context).size.width * .9,
+            child: Divider(
+              color: gbl.primaryLight,
+              thickness: .5,
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
-            child: MaterialButton(
-              onPressed: () {},
-              color: gbl.primaryLight,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              minWidth: MediaQuery.of(_context).size.width * .9,
-              splashColor: gbl.primaryDark,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              child: Text(
-                'Confirmar',
-                style: TextStyle(
-                    color: gbl.primaryDark, letterSpacing: 3, fontSize: 20),
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              width: MediaQuery.of(_context).size.width * .8,
+              child: MaterialButton(
+                onPressed: () {},
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                splashColor: gbl.baseRed,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.close_outlined,
+                      color: gbl.primaryLight,
+                      size: 20,
+                    ),
+                    Text(
+                      'Fechar o caixa',
+                      style: TextStyle(
+                          color: gbl.primaryLight,
+                          letterSpacing: 3,
+                          fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
