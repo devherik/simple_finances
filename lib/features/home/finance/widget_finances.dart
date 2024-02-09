@@ -83,13 +83,14 @@ class WidgetFinances {
                                 letterSpacing: 3),
                           ),
                           MaterialButton(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
                             onPressed: () {
                               showModalBottomSheet(
                                   context: _context,
                                   builder: (context) =>
                                       closeCashflowBottomSheet(cashflow));
                             },
-                            padding: const EdgeInsets.all(2),
                             color: gbl.primaryLight,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)),
@@ -480,6 +481,9 @@ class WidgetFinances {
               child: SizedBox(
                 width: MediaQuery.of(_context).size.width * .8,
                 child: MaterialButton(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  minWidth: MediaQuery.of(_context).size.width,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   splashColor: gbl.baseRed,
@@ -496,6 +500,9 @@ class WidgetFinances {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   MaterialButton(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    minWidth: MediaQuery.of(context).size.width,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(16)),
@@ -517,6 +524,9 @@ class WidgetFinances {
                                     ),
                                   ),
                                   MaterialButton(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    minWidth: MediaQuery.of(context).size.width,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(16)),
@@ -683,6 +693,9 @@ class WidgetFinances {
               child: SizedBox(
                 width: MediaQuery.of(_context).size.width * .8,
                 child: MaterialButton(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  minWidth: MediaQuery.of(_context).size.width,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   splashColor: gbl.baseRed,
@@ -699,6 +712,9 @@ class WidgetFinances {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   MaterialButton(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    minWidth: MediaQuery.of(context).size.width,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(16)),
@@ -720,6 +736,9 @@ class WidgetFinances {
                                     ),
                                   ),
                                   MaterialButton(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    minWidth: MediaQuery.of(context).size.width,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(16)),
@@ -861,6 +880,8 @@ class WidgetFinances {
             child: SizedBox(
               width: MediaQuery.of(_context).size.width * .8,
               child: MaterialButton(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 onPressed: () {},
                 elevation: 3,
                 shape: RoundedRectangleBorder(

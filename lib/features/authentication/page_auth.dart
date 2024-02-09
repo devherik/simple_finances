@@ -33,7 +33,11 @@ class _PageAuthState extends State<PageAuth> {
     return Scaffold(
       backgroundColor: gbl.primaryDark,
       body: Container(
-        color: gbl.primaryDark,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+        ),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
