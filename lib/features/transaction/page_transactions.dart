@@ -19,8 +19,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
   final _descriptionTextController = TextEditingController();
   final _valueTextController = TextEditingController();
 
-  // final _daoTransaction = DaoTransactions();
-
   bool incomeButtonState = true;
   Color incomeButtonBackColor = gbl.primaryLight;
   Color incomeButtonTextColor = gbl.primaryDark;
@@ -31,10 +29,12 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _daoTransaction = DaoTransactions(context: context);
     return Scaffold(
       backgroundColor: gbl.primaryDark,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          backgroundColor: gbl.primaryDark,
+          backgroundColor: Colors.transparent,
           title: Text(
             '${_dataLabel.day}/${_dataLabel.month}/${_dataLabel.year}',
             style: TextStyle(
@@ -67,6 +67,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
           ],
           centerTitle: true),
       body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+        ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         padding: const EdgeInsets.all(24),
@@ -143,6 +148,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         if (_valueTextController.text.isNotEmpty &&
                             _descriptionTextController.text.isNotEmpty) {
                           if (incomeButtonState) {
+                            onSave();
                             // _daoTransaction.persistTransaction(
                             //     _dataLabel,
                             //     'income',
@@ -210,5 +216,48 @@ class _TransactionsPageState extends State<TransactionsPage> {
         outcomeButtonTextColor = gbl.primaryLight;
       });
     }
+  }
+
+  void onSave() {
+    setState(() {
+      _descriptionTextController.value = _descriptionTextController.value
+          .copyWith(
+              text: '', selection: const TextSelection.collapsed(offset: 0));
+      _valueTextController.value.copyWith(
+          text: '', selection: const TextSelection.collapsed(offset: 0));
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: gbl.primaryDark,
+            content: const SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: gbl.baseGreen,
+                      size: 50,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        'Transação salva.',
+                        style: TextStyle(
+                            color: gbl.baseGreen,
+                            fontSize: 12,
+                            letterSpacing: 3),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
   }
 }

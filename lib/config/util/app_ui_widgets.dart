@@ -104,6 +104,7 @@ class UiWidgets {
   Widget basicNumberForm(String lable, String hint,
       TextEditingController controller, TextInputType type) {
     return TextField(
+      textInputAction: TextInputAction.next,
       keyboardType: type,
       controller: controller,
       textAlign: TextAlign.start,

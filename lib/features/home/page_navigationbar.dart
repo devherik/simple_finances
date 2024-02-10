@@ -25,8 +25,8 @@ class _PageNavigationBarState extends State<PageNavigationBar> {
           NavigationDestination(
               icon: Icon(Icons.track_changes), label: 'Objetivos'),
         ],
-        height: currentPageIndex == 1 ? 0 : 70,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        height: 50,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
         backgroundColor: Colors.transparent,
         indicatorColor: gbl.primaryLight,
