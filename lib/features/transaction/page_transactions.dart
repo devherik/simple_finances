@@ -24,47 +24,28 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Color incomeButtonTextColor = gbl.primaryDark;
 
   bool outcomeButtonState = false;
-  Color outcomeButtonBackColor = gbl.primaryDark;
+  Color outcomeButtonBackColor = Colors.transparent.withOpacity(.1);
   Color outcomeButtonTextColor = gbl.primaryLight;
+
+  bool orderButtonState = false;
+  Color orderButtonBackColor = Colors.transparent.withOpacity(.1);
+  Color orderButtonTextColor = gbl.primaryLight;
 
   @override
   Widget build(BuildContext context) {
     final _daoTransaction = DaoTransactions(context: context);
     return Scaffold(
-      backgroundColor: gbl.primaryDark,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text(
-            '${_dataLabel.day}/${_dataLabel.month}/${_dataLabel.year}',
+            'Nova transação',
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: gbl.primaryLight),
-          ),
-          actions: [
-            IconButton(
-              disabledColor: Colors.blueGrey,
-              onPressed: () async {
-                DateTime? newDate = await showDatePicker(
-                  context: context,
-                  initialDate: _dataLabel,
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime(2100),
-                );
-                if (newDate == null) {
-                  return;
-                } else {
-                  setState(() => _dataLabel = newDate);
-                  // Tthis date will be used to create an event, at the day the user wants
-                }
-              },
-              icon: Icon(
-                Icons.edit_calendar_rounded,
                 color: gbl.primaryLight,
-              ),
-            )
-          ],
+                letterSpacing: 3),
+          ),
           centerTitle: true),
       body: Container(
         decoration: const BoxDecoration(
@@ -74,20 +55,20 @@ class _TransactionsPageState extends State<TransactionsPage> {
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: SingleChildScrollView(
           reverse: false,
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * .7,
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           MaterialButton(
                               onPressed: incomeButtonStateChange,
@@ -96,11 +77,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 18),
+                                  horizontal: 12, vertical: 12),
                               onLongPress: null,
-                              minWidth: MediaQuery.of(context).size.width * .4,
+                              minWidth: MediaQuery.of(context).size.width * .3,
                               child: Text(
-                                'Income',
+                                'Entrada',
                                 style: TextStyle(
                                     color: incomeButtonTextColor,
                                     fontSize: 15,
@@ -113,13 +94,30 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 18),
+                                  horizontal: 12, vertical: 12),
                               onLongPress: null,
-                              minWidth: MediaQuery.of(context).size.width * .4,
+                              minWidth: MediaQuery.of(context).size.width * .3,
                               child: Text(
-                                'Outcome',
+                                'Saída',
                                 style: TextStyle(
                                     color: outcomeButtonTextColor,
+                                    fontSize: 15,
+                                    letterSpacing: 3),
+                              )),
+                          MaterialButton(
+                              onPressed: orderButtonStateChange,
+                              elevation: 4,
+                              color: orderButtonBackColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 12),
+                              onLongPress: null,
+                              minWidth: MediaQuery.of(context).size.width * .3,
+                              child: Text(
+                                'Pedido',
+                                style: TextStyle(
+                                    color: orderButtonTextColor,
                                     fontSize: 15,
                                     letterSpacing: 3),
                               )),
@@ -129,16 +127,40 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * .5,
-                        child: ui.basicNumberForm('Valor', "Informe o valor",
-                            _valueTextController, TextInputType.number),
+                        width: MediaQuery.of(context).size.width,
+                        child: ui.iconButtom(() async {
+                          DateTime? newDate = await showDatePicker(
+                            context: context,
+                            initialDate: _dataLabel,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2100),
+                          );
+                          if (newDate == null) {
+                            return;
+                          } else {
+                            setState(() => _dataLabel = newDate);
+                            // Tthis date will be used to create an event, at the day the user wants
+                          }
+                        }, '${_dataLabel.day}/${_dataLabel.month}/${_dataLabel.year}',
+                            Icons.edit_calendar_outlined, context),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: ui.basicNumberForm(
+                            'Valor',
+                            Icons.attach_money_outlined,
+                            _valueTextController,
+                            TextInputType.number),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: ui.basicTextForm(
                           'Descrição',
-                          'Informe os detalhes',
+                          Icons.text_snippet_outlined,
                           _descriptionTextController,
                           TextInputType.text),
                     ),
@@ -187,13 +209,16 @@ class _TransactionsPageState extends State<TransactionsPage> {
         incomeButtonBackColor = gbl.primaryLight;
         incomeButtonTextColor = gbl.primaryDark;
         outcomeButtonState = false;
-        outcomeButtonBackColor = gbl.primaryDark;
+        outcomeButtonBackColor = Colors.transparent.withOpacity(.1);
         outcomeButtonTextColor = gbl.primaryLight;
+        orderButtonState = false;
+        orderButtonBackColor = Colors.transparent.withOpacity(.1);
+        orderButtonTextColor = gbl.primaryLight;
       });
     } else {
       setState(() {
         incomeButtonState = false;
-        incomeButtonBackColor = gbl.primaryDark;
+        incomeButtonBackColor = Colors.transparent.withOpacity(.1);
         incomeButtonTextColor = gbl.primaryLight;
       });
     }
@@ -206,14 +231,39 @@ class _TransactionsPageState extends State<TransactionsPage> {
         outcomeButtonBackColor = gbl.primaryLight;
         outcomeButtonTextColor = gbl.primaryDark;
         incomeButtonState = false;
-        incomeButtonBackColor = gbl.primaryDark;
+        incomeButtonBackColor = Colors.transparent.withOpacity(.1);
         incomeButtonTextColor = gbl.primaryLight;
+        orderButtonState = false;
+        orderButtonBackColor = Colors.transparent.withOpacity(.1);
+        orderButtonTextColor = gbl.primaryLight;
       });
     } else {
       setState(() {
         outcomeButtonState = false;
-        outcomeButtonBackColor = gbl.primaryDark;
+        outcomeButtonBackColor = Colors.transparent.withOpacity(.1);
         outcomeButtonTextColor = gbl.primaryLight;
+      });
+    }
+  }
+
+  void orderButtonStateChange() {
+    if (!orderButtonState) {
+      setState(() {
+        orderButtonState = true;
+        orderButtonBackColor = gbl.primaryLight;
+        orderButtonTextColor = gbl.primaryDark;
+        incomeButtonState = false;
+        incomeButtonBackColor = Colors.transparent.withOpacity(.1);
+        incomeButtonTextColor = gbl.primaryLight;
+        outcomeButtonState = false;
+        outcomeButtonBackColor = Colors.transparent.withOpacity(.1);
+        outcomeButtonTextColor = gbl.primaryLight;
+      });
+    } else {
+      setState(() {
+        orderButtonState = false;
+        orderButtonBackColor = Colors.transparent.withOpacity(.1);
+        orderButtonTextColor = gbl.primaryLight;
       });
     }
   }
@@ -225,39 +275,37 @@ class _TransactionsPageState extends State<TransactionsPage> {
               text: '', selection: const TextSelection.collapsed(offset: 0));
       _valueTextController.value.copyWith(
           text: '', selection: const TextSelection.collapsed(offset: 0));
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: gbl.primaryDark,
-            content: const SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.check_circle_outline,
-                      color: gbl.baseGreen,
-                      size: 50,
+    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: gbl.primaryDark,
+          content: const SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_circle_outline,
+                    color: gbl.baseGreen,
+                    size: 50,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Text(
+                      'Transação salva.',
+                      style: TextStyle(
+                          color: gbl.baseGreen, fontSize: 12, letterSpacing: 3),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        'Transação salva.',
-                        style: TextStyle(
-                            color: gbl.baseGreen,
-                            fontSize: 12,
-                            letterSpacing: 3),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
-          );
-        },
-      );
-    });
+          ),
+        );
+      },
+    );
   }
 }

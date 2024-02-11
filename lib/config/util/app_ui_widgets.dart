@@ -57,7 +57,46 @@ class UiWidgets {
     );
   }
 
-  Widget basicTextForm(String lable, String hint,
+  Widget iconButtom(dynamic function, String label, IconData icon,
+      BuildContext parentContext) {
+    return SizedBox(
+      width: MediaQuery.of(parentContext).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(right: 16),
+            child: Icon(
+              icon,
+              color: gbl.primaryLight,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: MaterialButton(
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                color: Colors.transparent.withOpacity(.1),
+                minWidth: MediaQuery.of(parentContext).size.width,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                onPressed: function,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(label,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: gbl.secondaryLight,
+                          letterSpacing: 3)),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget basicTextForm(String lable, IconData icon,
       TextEditingController controller, TextInputType type) {
     return TextField(
       keyboardType: type,
@@ -67,23 +106,25 @@ class UiWidgets {
       style:
           TextStyle(fontSize: 15, letterSpacing: 3, color: gbl.secondaryLight),
       decoration: InputDecoration(
+          icon: Icon(icon),
+          iconColor: gbl.primaryLight,
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          border: OutlineInputBorder(
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: gbl.primaryLight,
               width: 1,
             ),
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: gbl.primaryLight,
               width: 1,
             ),
           ),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: gbl.primaryLight,
@@ -93,15 +134,12 @@ class UiWidgets {
           labelText: lable,
           labelStyle: TextStyle(
               fontSize: 15, color: gbl.secondaryLight, letterSpacing: 3),
-          hintText: hint,
-          hintStyle: TextStyle(
-              fontSize: 14, color: gbl.secondaryLight, letterSpacing: 3),
           filled: true,
-          fillColor: const Color(0x00ffffff)),
+          fillColor: Colors.transparent.withOpacity(.1)),
     );
   }
 
-  Widget basicNumberForm(String lable, String hint,
+  Widget basicNumberForm(String lable, IconData icon,
       TextEditingController controller, TextInputType type) {
     return TextField(
       textInputAction: TextInputAction.next,
@@ -112,24 +150,26 @@ class UiWidgets {
       style:
           TextStyle(fontSize: 15, letterSpacing: 3, color: gbl.secondaryLight),
       decoration: InputDecoration(
+          icon: Icon(icon),
+          iconColor: gbl.primaryLight,
           prefixText: 'R\$',
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          border: OutlineInputBorder(
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          border: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: gbl.primaryLight,
+              width: .1,
+            ),
+          ),
+          focusedBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: gbl.primaryLight,
               width: 1,
             ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: gbl.primaryLight,
@@ -142,7 +182,7 @@ class UiWidgets {
           hintStyle: TextStyle(
               fontSize: 14, color: gbl.secondaryLight, letterSpacing: 3),
           filled: true,
-          fillColor: const Color(0x00ffffff)),
+          fillColor: Colors.transparent.withOpacity(.2)),
     );
   }
 
@@ -155,7 +195,7 @@ class UiWidgets {
         style:
             TextStyle(letterSpacing: 3, fontSize: 15, color: gbl.primaryLight),
       ),
-      backgroundColor: gbl.primaryDark,
+      backgroundColor: Colors.transparent.withOpacity(.1),
     );
     ScaffoldMessenger.of(context).showSnackBar(snack);
   }
