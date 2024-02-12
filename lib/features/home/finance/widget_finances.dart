@@ -226,8 +226,8 @@ class WidgetFinances {
                       transactions[index].setPaymenteState(
                           !transactions[index].getPaymentState());
                       _daoTransactions!
-                          .updateTransaction(
-                              cashflow.getId(), transactions[index])
+                          .updateTransaction(cashflow.getId(),
+                              transactions[index], gbl.globalAccount!.getId())
                           .whenComplete(() {
                         _update();
                       });
@@ -307,8 +307,8 @@ class WidgetFinances {
                       transactions[index].setPaymenteState(
                           !transactions[index].getPaymentState());
                       _daoTransactions!
-                          .updateTransaction(
-                              cashflow.getId(), transactions[index])
+                          .updateTransaction(cashflow.getId(),
+                              transactions[index], gbl.globalAccount!.getId())
                           .whenComplete(() {
                         _update();
                       });

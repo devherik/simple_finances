@@ -6,36 +6,46 @@ import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.d
 class DaoCashflow {
   final _dataBase = CloudFirestoreDataBase();
 
-  Future<void> persistCashflow(EntityCashflow cashflow) async {
+  Future<void> persistCashflow(
+      EntityCashflow cashflow, String accountId) async {
     // open a new cashflow
-    await _dataBase
-        .persistDocument('/database/finance/cashflow', <String, dynamic>{
-      'init': cashflow.getInitTime(),
-      'open_value': cashflow.getOpenValue(),
-      'is_open': true
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print('Persist Cashflow ERROR: $error');
-      }
-    });
+    final currentCashflow = await getCurrentCashflow(accountId);
+    if (!currentCashflow.getState()) {
+      await _dataBase
+          .persistDocument('/accounts/$accountId/cashflows', <String, dynamic>{
+        'init': cashflow.getInitTime(),
+        'open_value': cashflow.getOpenValue(),
+        'is_open': true
+      }).onError((error, stackTrace) {
+        if (kDebugMode) {
+          print('Persist Cashflow ERROR: $error');
+        }
+      });
+    } else {}
   }
 
-  Future<void> closeCashflow(String id, DateTime end) async {
+  Future<void> closeCashflow(String accountId, DateTime end) async {
     // closes the cashflow
-    await _dataBase.updateDocument(
-        'database/finance/cashflow', id, <String, dynamic>{
-      'end': Timestamp.fromDate(end),
-      'is_open': false
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print('Close Cashflow ERROR: $error');
-      }
-    });
+    final currentCashflow = await getCurrentCashflow(accountId);
+    if (currentCashflow.getState()) {
+      await _dataBase.updateDocument('accounts/$accountId/cashflows',
+          currentCashflow.getId(), <String, dynamic>{
+        'end': Timestamp.fromDate(end),
+        'is_open': false
+      }).onError((error, stackTrace) {
+        if (kDebugMode) {
+          print('Close Cashflow ERROR: $error');
+        }
+      });
+    } else {}
   }
 
-  Future<void> updateCashflow(String id, double value) async {
+  Future<void> updateCashflow(String accountId, double value) async {
     // when a transction be done, it will send a value already calculated that will be used to update de cashflow
-    await _dataBase.updateDocument('database/finance/cashflow', id,
+    final currentCashflow = await getCurrentCashflow(accountId);
+    await _dataBase.updateDocument(
+        'accounts/$accountId/cashflow',
+        currentCashflow.getId(),
         <String, dynamic>{'open_value': value}).onError((error, stackTrace) {
       if (kDebugMode) {
         print('Update Cashflow ERROR: $error');
@@ -43,33 +53,44 @@ class DaoCashflow {
     });
   }
 
-  Future<EntityCashflow> getCurrentCashflow() async {
+  Future<EntityCashflow> getCurrentCashflow(String accountId) async {
     // when the finance page is loaded, the app try o get the current, open, cashflow,
     // and, if it's closed, create a empty cashflow until a new one be opened
-    final finance = await _dataBase.getDocument('database', 'finance');
-    final cashflow = await _dataBase.getDocument(
-        'database/finance/cashflow', finance['current_cashflow']);
+    final account = await _dataBase.getDocument('accounts', accountId);
+    final currentCashflow = await _dataBase.getDocument(
+        'accounts/$accountId/cashflows', account['current_cashflow']);
     EntityCashflow? entity;
-    cashflow['is_open']
-        ? entity = EntityCashflow(
-            id: cashflow.id,
-            init: cashflow['init'],
-            openValue: double.parse(cashflow['open_value'].toString()),
-            closeValue: double.parse(cashflow['close_value'].toString()),
-            isOpen: cashflow['is_open'])
-        : entity = EntityCashflow(
-            id: '',
-            init: Timestamp.now(),
-            openValue: 0.0,
-            closeValue: 0.0,
-            isOpen: true);
+    if (currentCashflow.exists) {
+      currentCashflow['is_open']
+          ? entity = EntityCashflow(
+              id: currentCashflow.id,
+              init: currentCashflow['init'],
+              openValue: double.parse(currentCashflow['open_value'].toString()),
+              closeValue:
+                  double.parse(currentCashflow['close_value'].toString()),
+              isOpen: currentCashflow['is_open'])
+          : entity = EntityCashflow(
+              id: '',
+              init: Timestamp.now(),
+              openValue: 0.0,
+              closeValue: 0.0,
+              isOpen: true);
+    } else {
+      entity = EntityCashflow(
+          id: '',
+          init: Timestamp.now(),
+          openValue: 0.0,
+          closeValue: 0.0,
+          isOpen: true);
+    }
     return entity;
   }
 
-  Future<EntityCashflow> getCashflow(String id) async {
+  Future<EntityCashflow> getCashflow(
+      String accountId, String cashflowId) async {
     // return a cashflow searched by the id
-    final cashflow =
-        await _dataBase.getDocument('/database/finance/cashflow', id);
+    final cashflow = await _dataBase.getDocument(
+        '/accounts/$accountId/cashflows', cashflowId);
     if (cashflow.exists) {
       if (cashflow['is_open']) {
         return EntityCashflow(
@@ -87,8 +108,6 @@ class DaoCashflow {
           closeValue: cashflow['close_value'],
           isOpen: cashflow['is_open'],
         );
-        entity.setCloseTime(cashflow['end']);
-        entity.setCloseValue(cashflow['close_value']);
         return entity;
       }
     } else {
@@ -102,11 +121,11 @@ class DaoCashflow {
     }
   }
 
-  Future<List<EntityCashflow>> getCashflows() async {
+  Future<List<EntityCashflow>> getCashflows(String accountId) async {
     // return a collection with all cashflows on the database, filtered by date of openning
     // that way will simplify the database storage by not creating a collection for each year, month or day
     final collection =
-        await _dataBase.getCollection('/database/finance/cashflow');
+        await _dataBase.getCollection('/accounts/$accountId/cashflows');
     List<EntityCashflow> cashflows = [];
     if (collection.docs.isNotEmpty) {
       for (var doc in collection.docs) {
@@ -117,8 +136,6 @@ class DaoCashflow {
           closeValue: doc['close_value'],
           isOpen: doc['is_open'],
         );
-        entity.setCloseTime(doc['end']);
-        entity.setCloseValue(doc['close_value']);
         cashflows.add(entity);
       }
       cashflows.sort(

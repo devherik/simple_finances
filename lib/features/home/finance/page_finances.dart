@@ -54,8 +54,8 @@ class _PageFinancesState extends State<PageFinances> {
           future: _currentCashflow,
           builder: (context, cashflow) {
             if (cashflow.hasData) {
-              _transactions = _daoTransactions!
-                  .getTransactionsCollection(cashflow.data!.getId());
+              _transactions = _daoTransactions!.getTransactionsCollection(
+                  cashflow.data!.getId(), gbl.globalAccount!.getId());
               return Column(
                 children: [
                   wfinance!.scrollAppBarCashflow(cashflow.data!),
@@ -103,7 +103,8 @@ class _PageFinancesState extends State<PageFinances> {
   }
 
   updatePage() {
-    _currentCashflow = _daoCashflow!.getCurrentCashflow();
+    _currentCashflow =
+        _daoCashflow!.getCurrentCashflow(gbl.globalAccount!.getId());
     setState(() {});
   }
 

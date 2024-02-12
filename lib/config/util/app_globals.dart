@@ -2,6 +2,8 @@ library globals;
 
 import 'dart:ui';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:simple_finances/config/database/entities/entity_account.dart';
+import 'package:simple_finances/config/database/entities/entity_user.dart';
 
 const String appTitle = 'Simple Finances';
 String centroLabel = '';
@@ -17,3 +19,6 @@ var secondaryDark = HexColor('#685850');
 var neutral = HexColor('#685850');
 var primaryLight = HexColor('#bebbba');
 var secondaryLight = HexColor('#8d8480');
+
+EntityAccount? globalAccount;
+EntityUser? globalUser;

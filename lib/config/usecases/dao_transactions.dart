@@ -14,17 +14,17 @@ class DaoTransactions {
 
   DaoTransactions({required BuildContext context}) : parentContext = context;
 
-  Future<void> persistTransaction(
-      EntityTransaction transaction, String cashflowId) async {
+  Future<void> persistTransaction(EntityTransaction transaction,
+      String cashflowId, String accountId) async {
     // by receiving a value (negative or positive), this function persist a transaction, then update the cashflow open_value field
-    final cashflow = await _daoCashflow.getCashflow(cashflowId);
+    final cashflow = await _daoCashflow.getCashflow(accountId, cashflowId);
     double newValue;
     transaction.getType() == 'order'
         ? newValue = cashflow.getOpenValue() + transaction.getValue()
         : newValue = cashflow.getOpenValue() - transaction.getValue();
     await _dataBase
         .persistDocument(
-            '/database/finance/cashflow/$cashflowId/transactions',
+            '/accounts/$accountId/cashflows/$cashflowId/transactions',
             <String, dynamic>{
               'description': transaction.getDescription(),
               'timestamp': transaction.getTimestamp(),
@@ -40,22 +40,22 @@ class DaoTransactions {
   }
 
   Future<void> deleteTransaction(
-      String cashflowId, String transactionId) async {}
+      String cashflowId, String transactionId, String accountId) async {}
 
-  Future<void> updateTransaction(
-      String cashflowId, EntityTransaction transaction) async {
+  Future<void> updateTransaction(String cashflowId,
+      EntityTransaction transaction, String accountId) async {
     // update using the id of the transaction
     _dataBase.updateDocument(
-        'database/finance/cashflow/$cashflowId/transactions',
+        'accounts/$accountId/cashflows/$cashflowId/transactions',
         transaction.getId(),
         transaction.toMap());
   }
 
   Future<List<EntityTransaction>> getTransactionsCollection(
-      String cashflowId) async {
+      String cashflowId, String accountId) async {
     List<EntityTransaction> transactionList = [];
     await _dataBase
-        .getCollection('database/finance/cashflow/$cashflowId/transactions')
+        .getCollection('accounts/$accountId/cashflows/$cashflowId/transactions')
         .then((collection) {
       if (collection.docs.isNotEmpty) {
         for (var doc in collection.docs) {
