@@ -112,30 +112,18 @@ class UiWidgets {
               const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
           ),
           focusedBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
           ),
           enabledBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
           ),
           labelText: lable,
           labelStyle: TextStyle(
               fontSize: 15, color: gbl.secondaryLight, letterSpacing: 3),
           filled: true,
-          fillColor: Colors.transparent.withOpacity(.1)),
+          fillColor: Colors.transparent.withOpacity(.4)),
     );
   }
 
@@ -157,24 +145,12 @@ class UiWidgets {
               const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: .1,
-            ),
           ),
           focusedBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
           ),
           enabledBorder: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: gbl.primaryLight,
-              width: 1,
-            ),
           ),
           labelText: lable,
           labelStyle: TextStyle(
@@ -182,7 +158,7 @@ class UiWidgets {
           hintStyle: TextStyle(
               fontSize: 14, color: gbl.secondaryLight, letterSpacing: 3),
           filled: true,
-          fillColor: Colors.transparent.withOpacity(.2)),
+          fillColor: Colors.transparent.withOpacity(.4)),
     );
   }
 
