@@ -15,6 +15,11 @@ class AppRouter {
       path: '/widgettree',
       builder: (context, state) => const WidgetTree(),
     ),
+    GoRoute(
+      path: '/home',
+      name: 'home',
+      builder: (context, state) => const PageHome(),
+    ),
     StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return PageNavigationBar(child: navigationShell);
@@ -59,5 +64,5 @@ class AppRouter {
                 ),
               ]),
         ]),
-  ], initialLocation: '/business');
+  ], initialLocation: '/widgettree');
 }

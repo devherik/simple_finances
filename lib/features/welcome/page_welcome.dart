@@ -27,7 +27,7 @@ class PageWelcome extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
                 onPressed: () {
-                  context.go('/login');
+                  context.go('/welcome/login');
                 },
                 elevation: 4,
                 color: gbl.primaryLight,

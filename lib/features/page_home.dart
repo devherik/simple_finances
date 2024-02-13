@@ -7,18 +7,15 @@ import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
 import 'package:simple_finances/config/util/app_ui_widgets.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
-import 'package:simple_finances/features/navigation_bar/page_navigation_bar.dart';
 
 class PageHome extends StatefulWidget {
-  const PageHome({super.key, required this.child});
-  final StatefulNavigationShell child;
+  const PageHome({super.key});
 
   @override
   State<PageHome> createState() => _PageHomeState();
 }
 
 class _PageHomeState extends State<PageHome> {
-  int currentPageIndex = 1;
   EntityUser _user = EntityUser(id: '', name: '');
   EntityAccount _account = EntityAccount(id: '', name: '', phone: '');
   late CloudFirestoreDataBase _database;
@@ -33,7 +30,22 @@ class _PageHomeState extends State<PageHome> {
 
   @override
   Widget build(BuildContext context) {
-    return PageNavigationBar(child: widget.child);
+    return Scaffold(
+      backgroundColor: gbl.primaryDark,
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/brown_gradient.jpeg'),
+              fit: BoxFit.cover),
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: gbl.primaryLight,
+          ),
+        ),
+      ),
+    );
   }
 
   void _updateApp() async {
@@ -45,14 +57,16 @@ class _PageHomeState extends State<PageHome> {
             _user.accountsLinked = user['accounts_linked'];
           })
           .whenComplete(() async => await _database
-                  .getDocument('accounts', _user.accountsLinked[0])
-                  .then((account) {
+              .getDocument('accounts', _user.accountsLinked[0])
+              .then((account) {
                 _account = EntityAccount(
                     id: account.id,
                     name: account['name'],
                     phone: account['phone']);
                 gbl.globalAccount = _account;
-              }).onError((error, stackTrace) {
+              })
+              .whenComplete(() => context.go('/cashflow'))
+              .onError((error, stackTrace) {
                 ui.showMessage(error.toString(), context);
               }))
           .onError((error, stackTrace) {

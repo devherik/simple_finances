@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_finances/config/database/entities/entity_cashflow.dart';
 import 'package:simple_finances/config/database/entities/transaction/entity_transaction.dart';
@@ -103,9 +104,15 @@ class _PageCashflowState extends State<PageCashflow> {
   }
 
   updatePage() {
-    _currentCashflow =
-        _daoCashflow!.getCurrentCashflow(gbl.globalAccount!.getId());
-    setState(() {});
+    try {
+      _currentCashflow =
+          _daoCashflow!.getCurrentCashflow(gbl.globalAccount!.getId());
+      setState(() {});
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   _scrollListener() {

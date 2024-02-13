@@ -107,7 +107,7 @@ class _PageAuthState extends State<PageAuth> {
                         vertical: 18, horizontal: 16),
                     suffixIcon: MaterialButton(
                       onPressed: () {
-                        context.push('/recovery');
+                        context.push('/welcome/login/recovery');
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
