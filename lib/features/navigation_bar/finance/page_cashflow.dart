@@ -5,20 +5,20 @@ import 'package:simple_finances/config/usecases/dao_cashflow.dart';
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
-import 'package:simple_finances/features/home/finance/widget_finances.dart';
+import 'package:simple_finances/features/navigation_bar/finance/widget_cashflow.dart';
 
-class PageFinances extends StatefulWidget {
-  const PageFinances({super.key});
+class PageCashflow extends StatefulWidget {
+  const PageCashflow({super.key});
 
   @override
-  State<PageFinances> createState() => _PageFinancesState();
+  State<PageCashflow> createState() => _PageCashflowState();
 }
 
-class _PageFinancesState extends State<PageFinances> {
+class _PageCashflowState extends State<PageCashflow> {
   DaoCashflow? _daoCashflow;
   DaoTransactions? _daoTransactions;
   Future<EntityCashflow>? _currentCashflow;
-  WidgetFinances? wfinance;
+  WidgetCashflow? wfinance;
   String appBarTitle = 'Caixa';
   late ScrollController _scrollController;
   double _scrollControllerOffset = 0.0;
@@ -28,7 +28,7 @@ class _PageFinancesState extends State<PageFinances> {
   void initState() {
     _daoCashflow = DaoCashflow();
     _daoTransactions = DaoTransactions(context: context);
-    wfinance = WidgetFinances(
+    wfinance = WidgetCashflow(
         context: context,
         scrollPosition: _scrollControllerOffset,
         daoTransactions: _daoTransactions,

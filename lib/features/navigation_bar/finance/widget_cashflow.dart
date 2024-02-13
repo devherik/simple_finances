@@ -6,13 +6,13 @@ import 'package:simple_finances/config/database/entities/transaction/entity_tran
 import 'package:simple_finances/config/usecases/dao_transactions.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
-class WidgetFinances {
+class WidgetCashflow {
   final BuildContext _context;
   double _scrollPosition;
   final DaoTransactions? _daoTransactions;
   final VoidCallback _update;
 
-  WidgetFinances(
+  WidgetCashflow(
       {required BuildContext context,
       required double scrollPosition,
       required DaoTransactions? daoTransactions,

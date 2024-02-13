@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
 import 'package:simple_finances/config/usecases/dao_goals.dart';
-import 'package:simple_finances/features/home/goal/widgets_goals.dart';
+import 'package:simple_finances/features/navigation_bar/business/widgets_goals.dart';
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
 
-class PageGoals extends StatefulWidget {
-  const PageGoals({super.key});
+class PageBusiness extends StatefulWidget {
+  const PageBusiness({super.key});
 
   @override
-  State<PageGoals> createState() => _PageGoalsState();
+  State<PageBusiness> createState() => _PageBusinessState();
 }
 
-class _PageGoalsState extends State<PageGoals> {
+class _PageBusinessState extends State<PageBusiness> {
   FireAuth? _auth;
   DaoGoal? _daoGoal;
   WidgetGoals? wGoal;

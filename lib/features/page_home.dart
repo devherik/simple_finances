@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:simple_finances/config/database/entities/entity_account.dart';
 import 'package:simple_finances/config/database/entities/entity_user.dart';
 import 'package:simple_finances/config/database/firebase/app_cloudfirestore_db.dart';
 import 'package:simple_finances/config/database/firebase/app_fireauth_db.dart';
 import 'package:simple_finances/config/util/app_ui_widgets.dart';
-import 'package:simple_finances/features/home/finance/page_finances.dart';
-import 'package:simple_finances/features/home/goal/page_goals.dart';
 
 import 'package:simple_finances/config/util/app_globals.dart' as gbl;
-import 'package:simple_finances/features/transaction/page_transactions.dart';
+import 'package:simple_finances/features/navigation_bar/page_navigation_bar.dart';
 
 class PageHome extends StatefulWidget {
-  const PageHome({super.key});
+  const PageHome({super.key, required this.child});
+  final StatefulNavigationShell child;
 
   @override
   State<PageHome> createState() => _PageHomeState();
@@ -26,7 +26,6 @@ class _PageHomeState extends State<PageHome> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _database = CloudFirestoreDataBase();
     _updateApp();
@@ -34,34 +33,7 @@ class _PageHomeState extends State<PageHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: gbl.primaryDark,
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.add), label: 'Adicionar'),
-          NavigationDestination(
-              icon: Icon(Icons.track_changes), label: 'Objetivos'),
-        ],
-        height: 50,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        selectedIndex: currentPageIndex,
-        backgroundColor: Colors.transparent,
-        indicatorColor: gbl.primaryLight,
-        surfaceTintColor: gbl.secondaryDark,
-        onDestinationSelected: (value) {
-          setState(() {
-            currentPageIndex = value;
-          });
-        },
-      ),
-      body: [
-        const PageFinances(),
-        const TransactionsPage(),
-        const PageGoals(),
-      ][currentPageIndex],
-      extendBody: true,
-    );
+    return PageNavigationBar(child: widget.child);
   }
 
   void _updateApp() async {
