@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:simple_finances/features/authentication/page_auth.dart';
 import 'package:simple_finances/features/authentication/page_recovery.dart';
@@ -48,21 +49,35 @@ class AppRouter {
           ])
         ]),
     GoRoute(
-        path: '/welcome',
-        name: 'welcome',
-        builder: (context, state) => const PageWelcome(),
+        path: '/login',
+        name: 'login',
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+              child: const PageAuth(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            ),
         routes: <RouteBase>[
           GoRoute(
-              path: 'login',
-              name: 'login',
-              builder: (context, state) => const PageAuth(),
-              routes: <RouteBase>[
-                GoRoute(
-                  path: 'recovery',
-                  name: 'recovery',
-                  builder: (context, state) => const PageRecovery(),
-                ),
-              ]),
+            path: 'recovery',
+            name: 'recovery',
+            pageBuilder: (context, state) => CustomTransitionPage<void>(
+              child: const PageRecovery(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            ),
+          ),
         ]),
+    GoRoute(
+        path: '/welcome',
+        name: 'welcome',
+        builder: (context, state) => const PageWelcome())
   ], initialLocation: '/widgettree');
 }
